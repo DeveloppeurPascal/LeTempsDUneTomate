@@ -1,0 +1,47 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object Button1: TButton
+    Position.X = 280.000000000000000000
+    Position.Y = 232.000000000000000000
+    TabOrder = 0
+    Text = 'Button1'
+    TextSettings.Trimming = None
+    OnClick = Button1Click
+  end
+  object MediaPlayerControl1: TMediaPlayerControl
+    Size.Width = 289.000000000000000000
+    Size.Height = 161.000000000000000000
+    Size.PlatformDefault = False
+    MediaPlayer = MediaPlayer1
+    Position.X = 312.000000000000000000
+    Position.Y = 296.000000000000000000
+  end
+  object OlfSelectDirectoryDialog1: TOlfSelectDirectoryDialog
+    Root = ''
+    Left = 136
+    Top = 88
+  end
+  object OlfAboutDialog1: TOlfAboutDialog
+    Titre = 'Le temps d'#39'une tomate'
+    VersionNumero = '0.1'
+    VersionDate = '20240522'
+    MultiResBitmap = <
+      item
+      end>
+    URL = 'https://github.com/DeveloppeurPascal/LeTempsDUneTomate'
+    Left = 280
+    Top = 88
+  end
+  object MediaPlayer1: TMediaPlayer
+    Left = 216
+    Top = 352
+  end
+end
