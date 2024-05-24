@@ -1,0 +1,13 @@
+- informations de version à remplir
+- icone à générer et ajouter au projet
+- social image pour GitHub
+- gérer les textes multilignes lorsqu'ils sont trop longs en largeur (cf Video Title Page Generator)
+- gérer des projets avec : titre, background de début, background de fin, image d'overlay "précédamment", durées de chaque étape, taille des vidéos (1920x1080 en dur pour le moment, changer les tailles des exports FFmpeg si besoin de changer de format)
+- ajouter des options de projet our paramétrer l'emplacement de FFmpeg
+- embarquer FFmpeg (macOS) dans le setup
+- embarquer FFmpeg (Windows) dans le setup (à réfléchir)
+- mettre à jour README FR/EN
+- dans les options, proposer des images de background début/fin par défaut
+- dans les options, proposer une image d'overlay "précédemment" par défaut
+- refaire l'interface utilisateur (ajout d'un menu, une toolbar éventuelle, la gestion des options du projet, ajouter une progress bar par saison / épisodes / étapes)
+- supprimer les fichiers de /temp au fur et à mesure de leur utilisation (en RELEASE)
