@@ -43,13 +43,15 @@ object frmMain: TfrmMain
   end
   object OlfAboutDialog1: TOlfAboutDialog
     Titre = 'Le temps d'#39'une tomate'
-    VersionNumero = '1.0'
-    VersionDate = '20240524'
+    VersionNumero = '1.1'
+    VersionDate = '20240531'
     MultiResBitmap = <
       item
       end>
+    Images = dmLogo.imgLogo
     URL = 'https://github.com/DeveloppeurPascal/LeTempsDUneTomate'
     onURLClick = OlfAboutDialog1URLClick
+    Copyright = '(c) 2024 Patrick Pr'#233'martin'
     Left = 280
     Top = 88
   end
