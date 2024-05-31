@@ -498,7 +498,6 @@ begin
 {$ELSE}
 {$MESSAGE FATAL 'Platform not available.'}
 {$ENDIF}
-  AddLog('Commande traitée.');
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
