@@ -31,7 +31,8 @@ uses
   Olf.FMX.TextImageFrame,
   FMX.Objects,
   FMX.Layouts,
-  FMX.Edit;
+  FMX.Edit,
+  uDMLogo;
 
 type
   TfrmMain = class(TForm)
@@ -116,7 +117,8 @@ uses
 {$IF Defined(MACOS)}
   Posix.Stdlib,
 {$ELSEIF Defined(MSWINDOWS)}
-  Winapi.ShellAPI, Winapi.Windows,
+  Winapi.ShellAPI,
+  Winapi.Windows,
 {$ENDIF}
   System.Generics.Collections,
   System.IOUtils,
@@ -443,8 +445,8 @@ begin
   LParams := '-y -loglevel error ' + AParams;
 {$ENDIF}
 {$IF Defined(MSWINDOWS)}
-  ShellExecute(0, CFFmpeg, PWideChar(LParams + ' "' + DestinationFilePath + '"'),
-    nil, nil, SW_SHOWNORMAL);
+  ShellExecute(0, CFFmpeg, PWideChar(LParams + ' "' + DestinationFilePath +
+    '"'), nil, nil, SW_SHOWNORMAL);
 {$ELSEIF Defined(MACOS)}
   _system(PAnsiChar(ansistring('"' + CFFmpeg + '" ' + LParams + ' "' +
     DestinationFilePath + '"')));
