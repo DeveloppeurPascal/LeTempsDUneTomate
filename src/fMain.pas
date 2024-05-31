@@ -164,7 +164,6 @@ end;
 
 procedure TfrmMain.Button1Click(Sender: TObject);
 var
-  VideoFolder: string;
   VideoFiles: TStringDynArray;
   i: integer;
 begin
@@ -438,13 +437,13 @@ var
   LParams: string;
 begin
 {$IFDEF DEBUG}
-  AddLog('"' + CFFmpeg + '" ' + Params + ' "' + DestinationFilePath + '"');
-  LParams := '-y '+AParams;
+  LParams := '-y ' + AParams;
+  AddLog('"' + CFFmpeg + '" ' + LParams + ' "' + DestinationFilePath + '"');
 {$ELSE}
   LParams := '-y -loglevel error ' + AParams;
 {$ENDIF}
 {$IF Defined(MSWINDOWS)}
-  ShellExecute(0, CFFmpeg, PWideChar(Params + ' "' + DestinationFilePath + '"'),
+  ShellExecute(0, CFFmpeg, PWideChar(LParams + ' "' + DestinationFilePath + '"'),
     nil, nil, SW_SHOWNORMAL);
 {$ELSEIF Defined(MACOS)}
   _system(PAnsiChar(ansistring('"' + CFFmpeg + '" ' + LParams + ' "' +
@@ -504,7 +503,7 @@ begin
         VideoFilePath := GetVideoFile;
 
         if VideoFilePath.IsEmpty then
-          Exit;
+          break;
 
         TraiterLaSaison(VideoFilePath, Saison, Episode);
       end;
