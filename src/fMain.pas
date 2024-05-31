@@ -188,9 +188,7 @@ begin
 
       TraiteFileDAttente;
     end;
-    // TODO : traiter le cas où pas de fichier
   end;
-  // TODO : traiter le cas où pas de dossier sélectionné ou inexistant
 end;
 
 procedure TfrmMain.CreateEndCover(const Title: string;
