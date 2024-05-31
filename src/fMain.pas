@@ -106,6 +106,8 @@ type
   public
     procedure InitMainFormCaption;
     procedure InitAboutDialogDescriptionAndLicense;
+    procedure PicResize(const FromFilePath, ToFilePath: string;
+      const NewWidth: integer = -1; const NewHeight: integer = -1);
   end;
 
 var
@@ -512,6 +514,69 @@ begin
   url_Open_In_Browser(AURL);
 end;
 
+procedure TfrmMain.PicResize(const FromFilePath, ToFilePath: string;
+const NewWidth, NewHeight: integer);
+var
+  btm1, btm2: TBitmap;
+  ratiow, ratioh, ratio: single;
+  w, h: integer;
+  x, y: integer;
+  ChangeLargeur, ChangeHauteur: boolean;
+begin
+  if not tfile.Exists(FromFilePath) then
+    Exit;
+
+  if tfile.Exists(ToFilePath) then
+    Exit;
+
+  ChangeLargeur := NewWidth > 0;
+  ChangeHauteur := NewHeight > 0;
+
+  btm1 := TBitmap.CreateFromFile(FromFilePath);
+  try
+    if ChangeLargeur then
+      ratiow := btm1.width / NewWidth
+    else
+      ratiow := 0;
+    if ChangeHauteur then
+      ratioh := btm1.height / NewHeight
+    else
+      ratioh := 0;
+    if ((ratiow = 0) or (ratioh < ratiow)) and (ratioh > 0) then
+      ratio := ratioh
+    else if ((ratioh = 0) or (ratiow < ratioh)) and (ratiow > 0) then
+      ratio := ratiow
+    else
+      ratio := 0;
+    if (ratio = 0) then
+      ratio := 1;
+    btm1.Resize(ceil(btm1.width / ratio), ceil(btm1.height / ratio));
+    if ratiow = 0 then
+      w := btm1.width
+    else
+      w := NewWidth;
+    if ratioh = 0 then
+      h := btm1.height
+    else
+      h := NewHeight;
+    btm2 := TBitmap.create(w, h);
+    try
+      x := ((btm1.width - w) div 2);
+      y := ((btm1.height - h) div 2);
+      tthread.Synchronize(nil,
+        procedure
+        begin
+          btm2.CopyFromBitmap(btm1, trect.create(x, y, x + w, y + h), 0, 0);
+        end);
+      btm2.SaveToFile(ToFilePath);
+    finally
+      FreeAndNil(btm2);
+    end;
+  finally
+    FreeAndNil(btm1);
+  end;
+end;
+
 function TfrmMain.SecondesToHHMMSS(const DureeEnSecondes: int64): string;
   function ToString2(nb: int64): string;
   begin
@@ -533,8 +598,8 @@ end;
 
 procedure TfrmMain.TraiteFileDAttente;
 begin
-  Button1.enabled := false;
-  Edit1.enabled := Button1.enabled;
+  Button1.Enabled := false;
+  Edit1.Enabled := Button1.Enabled;
 
   tthread.CreateAnonymousThread(
     procedure
@@ -558,8 +623,8 @@ begin
       tthread.Queue(nil,
         procedure
         begin
-          Button1.enabled := true;
-          Edit1.enabled := Button1.enabled;
+          Button1.Enabled := true;
+          Edit1.Enabled := Button1.Enabled;
         end);
     end).Start;
 end;
@@ -638,7 +703,7 @@ Const Saison: integer; var Episode: integer; const EpisodeDeLaSaison: integer;
 const DureeEpisodeEnSecondes: int64);
 var
   EpisodeFilePath, VersionCourteFilePath, EpisodeFinalFilePath,
-    ImgStartFilePath, ImgEndFilePath: string;
+    ImgStart1920FilePath, ImgStart1280FilePath, ImgEndFilePath: string;
   TempDir, FinalDir: string;
   lEpisode: integer;
 begin
@@ -698,19 +763,25 @@ begin
   ExecuteFFmpegAndWait('-i "' + VersionCourteFilePath + '" -i "' + CPrecedemment
     + '"  -filter_complex overlay', GetPrecedemmentFilePath(EpisodeFilePath));
 
-  AddLog('=> génération des images de début et fin');
+  AddLog('=> génération des images de début, de fin et pour YouTube');
 
   // - création des images d'intro de chaque épisode
   // => faire des PNG dans Delphi en 1920x1080
-  ImgStartFilePath := tpath.Combine(tpath.GetDirectoryName(EpisodeFilePath),
-    tpath.GetFileNameWithoutExtension(EpisodeFilePath) + '-start.png');
-  if not tfile.Exists(ImgStartFilePath) then
+  ImgStart1920FilePath := tpath.Combine(tpath.GetDirectoryName(EpisodeFilePath),
+    tpath.GetFileNameWithoutExtension(EpisodeFilePath) + '-1920x1080.png');
+  if not tfile.Exists(ImgStart1920FilePath) then
     tthread.Synchronize(nil,
       procedure
       begin
-        CreateStartCover(Edit1.Text, Saison, lEpisode, ImgStartFilePath);
+        CreateStartCover(Edit1.Text, Saison, lEpisode, ImgStart1920FilePath);
       end);
 
+  // => copie de l'image de départ en 1280x720 pour YouTube
+  ImgStart1280FilePath := tpath.Combine(FinalDir,
+    tpath.GetFileNameWithoutExtension(EpisodeFilePath) + '-1280x720.png');
+  PicResize(ImgStart1920FilePath, ImgStart1280FilePath, 1280);
+
+  // => faire des PNG dans Delphi en 1920x1080
   ImgEndFilePath := tpath.Combine(tpath.GetDirectoryName(EpisodeFilePath),
     tpath.GetFileNameWithoutExtension(EpisodeFilePath) + '-end.png');
   if not tfile.Exists(ImgEndFilePath) then
@@ -729,7 +800,7 @@ begin
   if EpisodeDeLaSaison = 1 then
     // => ./ffmpeg -loop 1 -t 3 -i CoverEpisode001.png -i ContenuDeLEpisode001.mkv -loop 1 -t 5 -i ASuivre.png -filter_complex 'concat=n=3;adelay=3s:all=1' EpisodeAPublier001.mkv
     ExecuteFFmpegAndWait('-loop 1 -t ' + cdureeintro.ToString + ' -i "' +
-      ImgStartFilePath + '" -i "' + EpisodeFilePath + '" -loop 1 -t ' +
+      ImgStart1920FilePath + '" -i "' + EpisodeFilePath + '" -loop 1 -t ' +
       cdureefin.ToString + ' -i "' + ImgEndFilePath +
       '" -filter_complex ''concat=n=3;adelay=' + cdureeintro.ToString +
       's:all=1''', EpisodeFinalFilePath)
@@ -737,7 +808,7 @@ begin
     // => ./ffmpeg -loop 1 -t 3 -i CoverEpisodeXXX.png -i VersionCourteAUtiliser(XXX-1).mkv -i ContenuDeLEpisodeXXX.mkv -loop 1 -t 5 -i ASuivre.png -filter_complex 'concat=n=4;adelay=53s:all=1' EpisodeAPublierXXX.mkv
     // => ./ffmpeg -loop 1 -t 3 -i CoverEpisodeXXX.png -i VersionCourteAUtiliser(XXX-1).mkv -i ContenuDeLEpisodeXXX.mkv -loop 1 -t 5 -i TheEndPourYouTube.png -filter_complex 'concat=n=4;adelay=53s:all=1' EpisodeAPublierXXX.mkv
     ExecuteFFmpegAndWait('-loop 1 -t ' + cdureeintro.ToString + ' -i "' +
-      ImgStartFilePath + '" -i "' + GetPrecedemmentFilePath
+      ImgStart1920FilePath + '" -i "' + GetPrecedemmentFilePath
       (tpath.Combine(TempDir, 'episode_' + Saison.ToString + '_' + (Episode - 1)
       .ToString + '.mp4')) + '" -i "' + EpisodeFilePath + '" -loop 1 -t ' +
       cdureefin.ToString + ' -i "' + ImgEndFilePath +
