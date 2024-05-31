@@ -482,6 +482,9 @@ procedure TfrmMain.ExecuteFFmpegAndWait(const AParams,
 var
   LParams: string;
 begin
+  if tfile.Exists(DestinationFilePath) then
+    Exit;
+
 {$IFDEF DEBUG}
   LParams := '-y ' + AParams;
   AddLog('"' + CFFmpeg + '" ' + LParams + ' "' + DestinationFilePath + '"');
@@ -704,19 +707,21 @@ begin
   // => faire des PNG dans Delphi en 1920x1080
   ImgStartFilePath := tpath.Combine(tpath.GetDirectoryName(EpisodeFilePath),
     tpath.GetFileNameWithoutExtension(EpisodeFilePath) + '-start.png');
-  tthread.Synchronize(nil,
-    procedure
-    begin
-      CreateStartCover(Edit1.Text, Saison, lEpisode, ImgStartFilePath);
-    end);
+  if not tfile.Exists(ImgStartFilePath) then
+    tthread.Synchronize(nil,
+      procedure
+      begin
+        CreateStartCover(Edit1.Text, Saison, lEpisode, ImgStartFilePath);
+      end);
 
   ImgEndFilePath := tpath.Combine(tpath.GetDirectoryName(EpisodeFilePath),
     tpath.GetFileNameWithoutExtension(EpisodeFilePath) + '-end.png');
-  tthread.Synchronize(nil,
-    procedure
-    begin
-      CreateEndCover(Edit1.Text, Saison, lEpisode, ImgEndFilePath);
-    end);
+  if not tfile.Exists(ImgEndFilePath) then
+    tthread.Synchronize(nil,
+      procedure
+      begin
+        CreateEndCover(Edit1.Text, Saison, lEpisode, ImgEndFilePath);
+      end);
 
   EpisodeFinalFilePath := tpath.Combine(FinalDir,
     tpath.GetFileName(EpisodeFilePath));
