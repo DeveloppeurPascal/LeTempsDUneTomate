@@ -2,40 +2,14 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 480
-  ClientWidth = 640
+  ClientHeight = 597
+  ClientWidth = 768
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
+  OnClose = FormClose
   DesignerMasterStyle = 0
-  object Button1: TButton
-    Align = Top
-    Margins.Left = 5.000000000000000000
-    Margins.Top = 5.000000000000000000
-    Margins.Right = 5.000000000000000000
-    Margins.Bottom = 5.000000000000000000
-    Position.X = 5.000000000000000000
-    Position.Y = 37.000000000000000000
-    Size.Width = 630.000000000000000000
-    Size.Height = 22.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 1
-    Text = 'Button1'
-    TextSettings.Trimming = None
-    OnClick = Button1Click
-  end
-  object MediaPlayerControl1: TMediaPlayerControl
-    Size.Width = 630.000000000000000000
-    Size.Height = 220.000000000000000000
-    Size.PlatformDefault = False
-    Align = Client
-    MediaPlayer = MediaPlayer1
-    Margins.Left = 5.000000000000000000
-    Margins.Top = 5.000000000000000000
-    Margins.Right = 5.000000000000000000
-    Margins.Bottom = 5.000000000000000000
-  end
   object OlfSelectDirectoryDialog1: TOlfSelectDirectoryDialog
     Root = ''
     Left = 136
@@ -59,7 +33,112 @@ object frmMain: TfrmMain
     Left = 216
     Top = 352
   end
-  object Memo1: TMemo
+  object ToolBar1: TToolBar
+    Size.Width = 768.000000000000000000
+    Size.Height = 40.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    object btnOpen: TButton
+      Align = Left
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 95.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'Open'
+      TextSettings.Trimming = None
+      OnClick = btnOpenClick
+    end
+    object btnQuit: TButton
+      Align = MostRight
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 683.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Quit'
+      TextSettings.Trimming = None
+      OnClick = btnQuitClick
+    end
+    object btnAbout: TButton
+      Align = Right
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 593.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'About'
+      TextSettings.Trimming = None
+      OnClick = btnAboutClick
+    end
+    object btnClose: TButton
+      Align = Left
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 185.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Close'
+      TextSettings.Trimming = None
+      OnClick = btnCloseClick
+    end
+    object btnStart: TButton
+      Align = MostLeft
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Start'
+      TextSettings.Trimming = None
+      OnClick = btnStartClick
+    end
+  end
+  object lBlockScreen: TLayout
+    Align = Client
+    HitTest = True
+    Size.Width = 768.000000000000000000
+    Size.Height = 247.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    object aniBlockScreen: TAniIndicator
+      Align = Center
+    end
+    object rBlockScreen: TRectangle
+      Align = Contents
+      Opacity = 0.600000023841857900
+      Size.Width = 768.000000000000000000
+      Size.Height = 247.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
+    end
+  end
+  object mmoLog: TMemo
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
     DataDetectorTypes = []
     ReadOnly = True
@@ -70,27 +149,192 @@ object frmMain: TfrmMain
     Margins.Right = 5.000000000000000000
     Margins.Bottom = 5.000000000000000000
     Position.X = 5.000000000000000000
-    Position.Y = 299.000000000000000000
-    Size.Width = 630.000000000000000000
-    Size.Height = 176.000000000000000000
+    Position.Y = 292.000000000000000000
+    Size.Width = 758.000000000000000000
+    Size.Height = 300.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 3
-    Viewport.Width = 626.000000000000000000
-    Viewport.Height = 172.000000000000000000
+    Viewport.Width = 754.000000000000000000
+    Viewport.Height = 296.000000000000000000
   end
-  object Edit1: TEdit
-    Touch.InteractiveGestures = [LongTap, DoubleTap]
-    Align = MostTop
-    TabOrder = 0
-    Position.X = 5.000000000000000000
-    Position.Y = 5.000000000000000000
+  object lProject: TLayout
+    Align = Client
     Margins.Left = 5.000000000000000000
     Margins.Top = 5.000000000000000000
     Margins.Right = 5.000000000000000000
     Margins.Bottom = 5.000000000000000000
-    Size.Width = 630.000000000000000000
-    Size.Height = 22.000000000000000000
+    Size.Width = 758.000000000000000000
+    Size.Height = 237.000000000000000000
     Size.PlatformDefault = False
-    TextPrompt = 'Titre de la s'#233'rie '#224' mouliner'
+    TabOrder = 4
+    object edtTitle: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 4
+      Position.X = 5.000000000000000000
+      Position.Y = 5.000000000000000000
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 748.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object edtVideoNamePrefixe: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 3
+      Position.X = 5.000000000000000000
+      Position.Y = 37.000000000000000000
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 748.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object edtImgBackgroundEnd: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 2
+      Position.X = 5.000000000000000000
+      Position.Y = 133.000000000000000000
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 748.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      object edtImgBackgroundEndSelect: TEllipsesEditButton
+        Touch.InteractiveGestures = [LongTap]
+        CanFocus = False
+        Cursor = crArrow
+        TextSettings.Trimming = None
+        Size.Width = 28.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = edtImgBackgroundEndSelectClick
+      end
+    end
+    object edtImgOverlay: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 1
+      Position.X = 5.000000000000000000
+      Position.Y = 101.000000000000000000
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 748.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      object edtImgOverlaySelect: TEllipsesEditButton
+        Touch.InteractiveGestures = [LongTap]
+        CanFocus = False
+        Cursor = crArrow
+        TextSettings.Trimming = None
+        Size.Width = 28.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = edtImgOverlaySelectClick
+      end
+    end
+    object edtImgBackgroundStart: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 0
+      Position.X = 5.000000000000000000
+      Position.Y = 69.000000000000000000
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 748.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      object edtImgBackgroundStartSelect: TEllipsesEditButton
+        Touch.InteractiveGestures = [LongTap]
+        CanFocus = False
+        Cursor = crArrow
+        TextSettings.Trimming = None
+        Size.Width = 28.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = edtImgBackgroundStartSelectClick
+      end
+    end
+    object GridPanelLayout1: TGridPanelLayout
+      Align = Top
+      Position.Y = 160.000000000000000000
+      Size.Width = 758.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      ColumnCollection = <
+        item
+          Value = 50.000000000000000000
+        end
+        item
+          Value = 50.000000000000000000
+        end>
+      ControlCollection = <
+        item
+          Column = 0
+          Control = btnSave
+          Row = 0
+        end
+        item
+          Column = 1
+          Control = btnCancel
+          Row = 0
+        end>
+      RowCollection = <
+        item
+          Value = 100.000000000000000000
+        end>
+      object btnSave: TButton
+        Align = Client
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Size.Width = 369.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Save'
+        TextSettings.Trimming = None
+        OnClick = btnSaveClick
+      end
+      object btnCancel: TButton
+        Align = Client
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Size.Width = 369.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Cancel'
+        TextSettings.Trimming = None
+        OnClick = btnCancelClick
+      end
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 
+      'Images (*.jpg, *.png)|*.png;*.jpg|Images JPEG|*.jpg|Images PNG|*' +
+      '.png'
+    Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
+    Left = 368
+    Top = 288
   end
 end

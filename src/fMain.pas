@@ -36,16 +36,45 @@ uses
 
 type
   TfrmMain = class(TForm)
-    Button1: TButton;
     OlfSelectDirectoryDialog1: TOlfSelectDirectoryDialog;
     OlfAboutDialog1: TOlfAboutDialog;
     MediaPlayer1: TMediaPlayer;
-    MediaPlayerControl1: TMediaPlayerControl;
-    Memo1: TMemo;
-    Edit1: TEdit;
-    procedure Button1Click(Sender: TObject);
+    mmoLog: TMemo;
+    edtTitle: TEdit;
+    edtVideoNamePrefixe: TEdit;
+    edtImgBackgroundEnd: TEdit;
+    edtImgOverlay: TEdit;
+    edtImgBackgroundStart: TEdit;
+    lProject: TLayout;
+    ToolBar1: TToolBar;
+    btnOpen: TButton;
+    btnQuit: TButton;
+    btnAbout: TButton;
+    btnClose: TButton;
+    btnStart: TButton;
+    lBlockScreen: TLayout;
+    aniBlockScreen: TAniIndicator;
+    rBlockScreen: TRectangle;
+    GridPanelLayout1: TGridPanelLayout;
+    btnSave: TButton;
+    btnCancel: TButton;
+    edtImgBackgroundStartSelect: TEllipsesEditButton;
+    edtImgOverlaySelect: TEllipsesEditButton;
+    edtImgBackgroundEndSelect: TEllipsesEditButton;
+    OpenDialog1: TOpenDialog;
     procedure OlfAboutDialog1URLClick(const AURL: string);
     procedure FormCreate(Sender: TObject);
+    procedure btnQuitClick(Sender: TObject);
+    procedure btnAboutClick(Sender: TObject);
+    procedure btnOpenClick(Sender: TObject);
+    procedure btnCloseClick(Sender: TObject);
+    procedure btnStartClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure edtImgBackgroundStartSelectClick(Sender: TObject);
+    procedure edtImgOverlaySelectClick(Sender: TObject);
+    procedure edtImgBackgroundEndSelectClick(Sender: TObject);
+    procedure btnCancelClick(Sender: TObject);
+    procedure btnSaveClick(Sender: TObject);
   private
   protected
     /// <summary>
@@ -108,6 +137,9 @@ type
     procedure InitAboutDialogDescriptionAndLicense;
     procedure PicResize(const FromFilePath, ToFilePath: string;
       const NewWidth: integer = -1; const NewHeight: integer = -1);
+    procedure UpdateButtons;
+    procedure BlockScreen(Const AEnabled: boolean);
+    procedure InitProjectOnScreen;
   end;
 
 var
@@ -129,7 +161,9 @@ uses
   System.Math,
   uConsts,
   u_urlOpen,
-  udmAdobeStock_286917767;
+  udmAdobeStock_286917767,
+  uConfig,
+  uProject;
 
 type
   TBitmap = FMX.Graphics.TBitmap;
@@ -144,15 +178,15 @@ begin
     begin
       if isTitle then
       begin
-        Memo1.lines.Add('');
-        Memo1.lines.Add('**********');
-        Memo1.lines.Add('* ' + Text);
-        Memo1.lines.Add('**********');
-        Memo1.lines.Add('');
+        mmoLog.lines.Add('');
+        mmoLog.lines.Add('**********');
+        mmoLog.lines.Add('* ' + Text);
+        mmoLog.lines.Add('**********');
+        mmoLog.lines.Add('');
       end
       else
-        Memo1.lines.Add(Text);
-      Memo1.GoToTextEnd;
+        mmoLog.lines.Add(Text);
+      mmoLog.GoToTextEnd;
     end);
 end;
 
@@ -168,28 +202,88 @@ begin
     '" ajouté à la file d''attente.');
 end;
 
-procedure TfrmMain.Button1Click(Sender: TObject);
-var
-  VideoFiles: TStringDynArray;
-  i: integer;
+procedure TfrmMain.BlockScreen(const AEnabled: boolean);
+begin
+  if AEnabled then
+  begin
+    lBlockScreen.Visible := true;
+    lBlockScreen.BringToFront;
+    rBlockScreen.BringToFront;
+    aniBlockScreen.Enabled := true;
+    aniBlockScreen.BringToFront;
+    ToolBar1.Visible := false;
+  end
+  else
+  begin
+    aniBlockScreen.Enabled := false;
+    lBlockScreen.Visible := false;
+    ToolBar1.Visible := true;
+  end;
+end;
+
+procedure TfrmMain.btnAboutClick(Sender: TObject);
+begin
+  OlfAboutDialog1.Execute;
+end;
+
+procedure TfrmMain.btnCancelClick(Sender: TObject);
+begin
+  InitProjectOnScreen;
+end;
+
+procedure TfrmMain.btnCloseClick(Sender: TObject);
+begin
+  tproject.Close;
+  InitProjectOnScreen;
+
+  UpdateButtons;
+end;
+
+procedure TfrmMain.btnOpenClick(Sender: TObject);
 begin
   if OlfSelectDirectoryDialog1.Execute and
     TDirectory.Exists(OlfSelectDirectoryDialog1.Directory) then
   begin
-    VideoFiles := TDirectory.GetFiles(OlfSelectDirectoryDialog1.Directory,
-      function(const Path: string; const SearchRec: TSearchRec): boolean
-      begin
-        result := string(SearchRec.Name).tolower.EndsWith('.mp4');
-      end);
-    if (length(VideoFiles) > 0) then
+    tproject.Open(OlfSelectDirectoryDialog1.Directory);
+    InitProjectOnScreen;
+  end;
+
+  UpdateButtons;
+end;
+
+procedure TfrmMain.btnQuitClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfrmMain.btnSaveClick(Sender: TObject);
+begin
+  tproject.Title := edtTitle.Text;
+  tproject.VideoFilePrefix := edtVideoNamePrefixe.Text;
+  tproject.StartBackgroundImage := edtImgBackgroundStart.Text;
+  tproject.OverlayImage := edtImgOverlay.Text;
+  tproject.EndBackgroundImage := edtImgBackgroundEnd.Text;
+  tproject.save;
+end;
+
+procedure TfrmMain.btnStartClick(Sender: TObject);
+var
+  VideoFiles: TStringDynArray;
+  i: integer;
+begin
+  VideoFiles := TDirectory.GetFiles(tproject.GetFolder,
+    function(const Path: string; const SearchRec: TSearchRec): boolean
     begin
-      // TODO : trier la liste
+      result := string(SearchRec.Name).tolower.EndsWith('.mp4');
+    end);
+  if (length(VideoFiles) > 0) then
+  begin
+    // TODO : trier la liste
 
-      for i := 0 to length(VideoFiles) - 1 do
-        AddVideoFile(VideoFiles[i]);
+    for i := 0 to length(VideoFiles) - 1 do
+      AddVideoFile(VideoFiles[i]);
 
-      TraiteFileDAttente;
-    end;
+    TraiteFileDAttente;
   end;
 end;
 
@@ -201,12 +295,15 @@ var
   lTitle, lEpisode: TLayout;
   bmp: TBitmap;
 begin
+  if tfile.Exists(FileName) then
+    Exit;
+
   img := timage.create(self);
   try
     img.parent := self;
-    img.width := CVideoWidth / img.Bitmap.BitmapScale;
-    img.height := CVideoHeight / img.Bitmap.BitmapScale;
-    img.Bitmap.LoadFromFile(CPageFinEpisode);
+    img.width := tconfig.DefaultVideoWidth / img.Bitmap.BitmapScale;
+    img.height := tconfig.DefaultVideoHeight / img.Bitmap.BitmapScale;
+    img.Bitmap.LoadFromFile(tproject.EndBackgroundImage);
 
     lTitle := TLayout.create(self);
     try
@@ -272,12 +369,15 @@ var
   lTitle, lEpisode: TLayout;
   bmp: TBitmap;
 begin
+  if tfile.Exists(FileName) then
+    Exit;
+
   img := timage.create(self);
   try
     img.parent := self;
-    img.width := CVideoWidth / img.Bitmap.BitmapScale;
-    img.height := CVideoHeight / img.Bitmap.BitmapScale;
-    img.Bitmap.LoadFromFile(CPageIntro);
+    img.width := tconfig.DefaultVideoWidth / img.Bitmap.BitmapScale;
+    img.height := tconfig.DefaultVideoHeight / img.Bitmap.BitmapScale;
+    img.Bitmap.LoadFromFile(tproject.StartBackgroundImage);
 
     lTitle := TLayout.create(self);
     try
@@ -333,6 +433,33 @@ begin
   finally
     img.free;
   end;
+end;
+
+procedure TfrmMain.edtImgBackgroundEndSelectClick(Sender: TObject);
+begin
+  if OpenDialog1.InitialDir.IsEmpty then
+    OpenDialog1.InitialDir := tproject.GetFolder;
+
+  if OpenDialog1.Execute then
+    edtImgBackgroundEnd.Text := OpenDialog1.FileName;
+end;
+
+procedure TfrmMain.edtImgBackgroundStartSelectClick(Sender: TObject);
+begin
+  if OpenDialog1.InitialDir.IsEmpty then
+    OpenDialog1.InitialDir := tproject.GetFolder;
+
+  if OpenDialog1.Execute then
+    edtImgBackgroundStart.Text := OpenDialog1.FileName;
+end;
+
+procedure TfrmMain.edtImgOverlaySelectClick(Sender: TObject);
+begin
+  if OpenDialog1.InitialDir.IsEmpty then
+    OpenDialog1.InitialDir := tproject.GetFolder;
+
+  if OpenDialog1.Execute then
+    edtImgOverlay.Text := OpenDialog1.FileName;
 end;
 
 function TfrmMain.getConvertedCharImageIndex(Sender: TOlfFMXTextImageFrame;
@@ -477,6 +604,21 @@ begin
     OlfAboutDialog1.VersionNumero;
 end;
 
+procedure TfrmMain.InitProjectOnScreen;
+begin
+  if tproject.isOpened then
+  begin
+    lProject.Visible := true;
+    edtTitle.Text := tproject.Title;
+    edtVideoNamePrefixe.Text := tproject.VideoFilePrefix;
+    edtImgBackgroundStart.Text := tproject.StartBackgroundImage;
+    edtImgOverlay.Text := tproject.OverlayImage;
+    edtImgBackgroundEnd.Text := tproject.EndBackgroundImage;
+  end
+  else
+    lProject.Visible := false;
+end;
+
 procedure TfrmMain.ExecuteFFmpegAndWait(const AParams,
   DestinationFilePath: string);
 var
@@ -487,26 +629,36 @@ begin
 
 {$IFDEF DEBUG}
   LParams := '-y ' + AParams;
-  AddLog('"' + CFFmpeg + '" ' + LParams + ' "' + DestinationFilePath + '"');
+  AddLog('"' + tconfig.FFmpegPath + '" ' + LParams + ' "' +
+    DestinationFilePath + '"');
 {$ELSE}
   LParams := '-y -loglevel error ' + AParams;
 {$ENDIF}
 {$IF Defined(MSWINDOWS)}
-  ShellExecute(0, CFFmpeg, PWideChar(LParams + ' "' + DestinationFilePath +
-    '"'), nil, nil, SW_SHOWNORMAL);
+  ShellExecute(0, pwidechar(tconfig.FFmpegPath),
+    pwidechar(LParams + ' "' + DestinationFilePath + '"'), nil, nil,
+    SW_SHOWNORMAL);
 {$ELSEIF Defined(MACOS)}
-  _system(PAnsiChar(ansistring('"' + CFFmpeg + '" ' + LParams + ' "' +
-    DestinationFilePath + '"')));
+  _system(PAnsiChar(ansistring('"' + tconfig.FFmpegPath + '" ' + LParams + ' "'
+    + DestinationFilePath + '"')));
 {$ELSE}
 {$MESSAGE FATAL 'Platform not available.'}
 {$ENDIF}
 end;
 
+procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if tproject.isOpened then
+    tproject.Close;
+end;
+
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+  BlockScreen(false);
   InitMainFormCaption;
-
   InitAboutDialogDescriptionAndLicense;
+  UpdateButtons;
+  InitProjectOnScreen;
 end;
 
 procedure TfrmMain.OlfAboutDialog1URLClick(const AURL: string);
@@ -598,35 +750,36 @@ end;
 
 procedure TfrmMain.TraiteFileDAttente;
 begin
-  Button1.Enabled := false;
-  Edit1.Enabled := Button1.Enabled;
-
-  tthread.CreateAnonymousThread(
-    procedure
-    var
-      VideoFilePath: string;
-      Saison, Episode: integer;
-    begin
-      AddLog('Démarrage du traitement.', true);
-      Saison := 0;
-      Episode := 0;
-      while (not tthread.CheckTerminated) do
+  BlockScreen(true);
+  try
+    tthread.CreateAnonymousThread(
+      procedure
+      var
+        VideoFilePath: string;
+        Saison, Episode: integer;
       begin
-        VideoFilePath := GetVideoFile;
-
-        if VideoFilePath.IsEmpty then
-          break;
-
-        TraiterLaSaison(VideoFilePath, Saison, Episode);
-      end;
-      AddLog('Fin du traitement.', true);
-      tthread.Queue(nil,
-        procedure
+        AddLog('Démarrage du traitement.', true);
+        Saison := 0;
+        Episode := 0;
+        while (not tthread.CheckTerminated) do
         begin
-          Button1.Enabled := true;
-          Edit1.Enabled := Button1.Enabled;
-        end);
-    end).Start;
+          VideoFilePath := GetVideoFile;
+
+          if VideoFilePath.IsEmpty then
+            break;
+
+          TraiterLaSaison(VideoFilePath, Saison, Episode);
+        end;
+        AddLog('Fin du traitement.', true);
+        tthread.Queue(nil,
+          procedure
+          begin
+            BlockScreen(false);
+          end);
+      end).Start;
+  except
+    BlockScreen(false);
+  end;
 end;
 
 procedure TfrmMain.TraiterLaSaison(const AFilePath: string;
@@ -682,7 +835,7 @@ begin
   if DureeTotaleEnSecondes < 1 then
     Exit;
 
-  NbEpisodes := ceil(DureeTotaleEnSecondes / CDureeEpisodeEnSecondes);
+  NbEpisodes := ceil(DureeTotaleEnSecondes / (tproject.VideoDuration * 60));
 
   AddLog('Nb épisodes : ' + NbEpisodes.ToString);
 
@@ -720,8 +873,8 @@ begin
   if not TDirectory.Exists(FinalDir) then
     TDirectory.CreateDirectory(FinalDir);
 
-  EpisodeFilePath := tpath.Combine(TempDir, 'episode_' + Saison.ToString + '_' +
-    Episode.ToString + '.mp4');
+  EpisodeFilePath := tpath.Combine(TempDir, tproject.VideoFilePrefix + '_' +
+    Saison.ToString + '_' + Episode.ToString + '.mp4');
 
   AddLog('=> extraction depuis la vidéo complète');
 
@@ -760,8 +913,9 @@ begin
 
   // - ajout du "précédemment" aux versions courtes
   // => ./ffmpeg -i VersionCourte.mkv  -i precedemment.png -filter_complex overlay VersionCourteAUtiliser.mp4
-  ExecuteFFmpegAndWait('-i "' + VersionCourteFilePath + '" -i "' + CPrecedemment
-    + '"  -filter_complex overlay', GetPrecedemmentFilePath(EpisodeFilePath));
+  ExecuteFFmpegAndWait('-i "' + VersionCourteFilePath + '" -i "' +
+    tproject.OverlayImage + '"  -filter_complex overlay',
+    GetPrecedemmentFilePath(EpisodeFilePath));
 
   AddLog('=> génération des images de début, de fin et pour YouTube');
 
@@ -773,7 +927,8 @@ begin
     tthread.Synchronize(nil,
       procedure
       begin
-        CreateStartCover(Edit1.Text, Saison, lEpisode, ImgStart1920FilePath);
+        CreateStartCover(tproject.Title, Saison, lEpisode,
+          ImgStart1920FilePath);
       end);
 
   // => copie de l'image de départ en 1280x720 pour YouTube
@@ -788,7 +943,7 @@ begin
     tthread.Synchronize(nil,
       procedure
       begin
-        CreateEndCover(Edit1.Text, Saison, lEpisode, ImgEndFilePath);
+        CreateEndCover(tproject.Title, Saison, lEpisode, ImgEndFilePath);
       end);
 
   EpisodeFinalFilePath := tpath.Combine(FinalDir,
@@ -809,11 +964,18 @@ begin
     // => ./ffmpeg -loop 1 -t 3 -i CoverEpisodeXXX.png -i VersionCourteAUtiliser(XXX-1).mkv -i ContenuDeLEpisodeXXX.mkv -loop 1 -t 5 -i TheEndPourYouTube.png -filter_complex 'concat=n=4;adelay=53s:all=1' EpisodeAPublierXXX.mkv
     ExecuteFFmpegAndWait('-loop 1 -t ' + cdureeintro.ToString + ' -i "' +
       ImgStart1920FilePath + '" -i "' + GetPrecedemmentFilePath
-      (tpath.Combine(TempDir, 'episode_' + Saison.ToString + '_' + (Episode - 1)
-      .ToString + '.mp4')) + '" -i "' + EpisodeFilePath + '" -loop 1 -t ' +
-      cdureefin.ToString + ' -i "' + ImgEndFilePath +
+      (tpath.Combine(TempDir, tproject.VideoFilePrefix + '_' + Saison.ToString +
+      '_' + (Episode - 1).ToString + '.mp4')) + '" -i "' + EpisodeFilePath +
+      '" -loop 1 -t ' + cdureefin.ToString + ' -i "' + ImgEndFilePath +
       '" -filter_complex ''concat=n=4;adelay=' + (cdureeintro + CDureeRecap)
       .ToString + 's:all=1''', EpisodeFinalFilePath);
+end;
+
+procedure TfrmMain.UpdateButtons;
+begin
+  btnOpen.Visible := not tproject.isOpened;
+  btnStart.Visible := not btnOpen.Visible;
+  btnClose.Visible := not btnOpen.Visible;
 end;
 
 initialization
