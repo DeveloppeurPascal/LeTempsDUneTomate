@@ -361,7 +361,6 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Language.pas"/>
-        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Params.pas"/>
         <DCCReference Include="..\lib-externes\librairies\src\u_urlOpen.pas"/>
         <DCCReference Include="uConsts.pas"/>
         <DCCReference Include="..\_PRIVATE\AdobeStock_286917767\udmAdobeStock_286917767.pas">
@@ -379,6 +378,10 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Params.pas"/>
+        <DCCReference Include="uConfig.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas"/>
+        <DCCReference Include="uProject.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -453,6 +456,12 @@
                 </DeployFile>
                 <DeployFile LocalName="OSX64\Debug\LeTempsDUneTomate" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="OSX64">
+                        <RemoteName>LeTempsDUneTomate</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\LeTempsDUneTomate.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                    <Platform Name="OSXARM64">
                         <RemoteName>LeTempsDUneTomate</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
