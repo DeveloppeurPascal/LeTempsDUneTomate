@@ -31,8 +31,11 @@ type
     class property OverlayImage: string read GetOverlayImage
       write SetOverlayImage;
     class procedure Open(const FromPath: string);
+    class procedure Save;
     class procedure Close;
     class procedure Cancel;
+    class function isOpened: boolean;
+    class function GetFolder: string;
   end;
 
 implementation
@@ -43,7 +46,8 @@ uses
   System.Types,
   System.SysUtils,
   Olf.RTL.CryptDecrypt,
-  Olf.RTL.Params;
+  Olf.RTL.Params,
+  uConfig;
 
 var
   ProjectFile: TParamsFile;
@@ -57,24 +61,28 @@ end;
 
 class procedure TProject.Close;
 begin
-  ProjectFile.save;
-
   freeandnil(ProjectFile);
 end;
 
 class function TProject.GetEndBackgroundImage: string;
 begin
-  result := ProjectFile.getValue('EndImg', '');
+  result := ProjectFile.getValue('EndImg', tConfig.DefaultEndBackgroundImage);
+end;
+
+class function TProject.GetFolder: string;
+begin
+  result := tpath.GetDirectoryName(ProjectFile.getFilePath);
 end;
 
 class function TProject.GetOverlayImage: string;
 begin
-  result := ProjectFile.getValue('OverImg', '');
+  result := ProjectFile.getValue('OverImg', tConfig.DefaultOverlayImage);
 end;
 
 class function TProject.GetStartBackgroundImage: string;
 begin
-  result := ProjectFile.getValue('StartImg', '');
+  result := ProjectFile.getValue('StartImg',
+    tConfig.DefaultStartBackgroundImage);
 end;
 
 class function TProject.GetTitle: string;
@@ -84,12 +92,17 @@ end;
 
 class function TProject.GetVideoDuration: integer;
 begin
-  result := ProjectFile.getValue('MvD', 0);
+  result := ProjectFile.getValue('MvD', tConfig.DefaultVideoDuration);
 end;
 
 class function TProject.GetVideoFilePrefix: string;
 begin
   result := ProjectFile.getValue('MvF', '');
+end;
+
+class function TProject.isOpened: boolean;
+begin
+  result := assigned(ProjectFile);
 end;
 
 class procedure TProject.Open(const FromPath: string);
@@ -151,6 +164,11 @@ begin
     end;
 {$ENDIF}
   ProjectFile.Load;
+end;
+
+class procedure TProject.Save;
+begin
+  ProjectFile.Save;
 end;
 
 class procedure TProject.SetEndBackgroundImage(const Value: string);
