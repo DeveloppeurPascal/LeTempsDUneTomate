@@ -7,3 +7,6 @@
 [submodule "lib-externes/Delphi-FMXExtend-Library"]
 	path = lib-externes/Delphi-FMXExtend-Library
 	url = https://github.com/DeveloppeurPascal/Delphi-FMXExtend-Library.git
+[submodule "lib-externes/Pic-Resize"]
+	path = lib-externes/Pic-Resize
+	url = https://github.com/DeveloppeurPascal/Pic-Resize.git
