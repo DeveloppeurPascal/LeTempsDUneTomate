@@ -1,0 +1,192 @@
+unit uConfig;
+
+interface
+
+type
+  tConfig = class
+  private
+    class procedure SetDefaultEndBackgroundImage(const Value: string); static;
+    class procedure SetDefaultOverlayImage(const Value: string); static;
+    class procedure SetDefaultStartBackgroundImage(const Value: string); static;
+    class procedure SetDefaultVideoDuration(const Value: integer); static;
+    class procedure SetDefaultVideoHeight(const Value: integer); static;
+    class procedure SetDefaultVideoWidth(const Value: integer); static;
+    class function GetDefaultEndBackgroundImage: string; static;
+    class function GetDefaultOverlayImage: string; static;
+    class function GetDefaultStartBackgroundImage: string; static;
+    class function GetDefaultVideoDuration: integer; static;
+    class function GetDefaultVideoHeight: integer; static;
+    class function GetDefaultVideoWidth: integer; static;
+    class function GetFFmpegPath: string; static;
+    class procedure SetFFmpegPath(const Value: string); static;
+  protected
+  public
+    class property FFmpegPath: string read GetFFmpegPath write SetFFmpegPath;
+    class property DefaultStartBackgroundImage: string
+      read GetDefaultStartBackgroundImage write SetDefaultStartBackgroundImage;
+    class property DefaultEndBackgroundImage: string
+      read GetDefaultEndBackgroundImage write SetDefaultEndBackgroundImage;
+    class property DefaultOverlayImage: string read GetDefaultOverlayImage
+      write SetDefaultOverlayImage;
+    class property DefaultVideoDuration: integer read GetDefaultVideoDuration
+      write SetDefaultVideoDuration;
+    class property DefaultVideoWidth: integer read GetDefaultVideoWidth
+      write SetDefaultVideoWidth;
+    class property DefaultVideoHeight: integer read GetDefaultVideoHeight
+      write SetDefaultVideoHeight;
+    class procedure Save;
+    class procedure Cancel;
+  end;
+
+implementation
+
+uses
+  System.Classes,
+  System.IOUtils,
+  System.Types,
+  System.SysUtils,
+  Olf.RTL.CryptDecrypt,
+  Olf.RTL.Params,
+  uConsts;
+
+var
+  ConfigFile: TParamsFile;
+
+procedure initConfig;
+begin
+  ConfigFile := TParamsFile.Create;
+  ConfigFile.InitDefaultFileNameV2('OlfSoftware', 'LeTempsDUneTomate', false);
+{$IFDEF RELEASE }
+  ConfigFile.onCryptProc := function(Const AParams: string): TStream
+    var
+      Keys: TByteDynArray;
+      ParStream: TStringStream;
+    begin
+      ParStream := TStringStream.Create(AParams);
+      try
+{$I '..\_PRIVATE\src\ConfigFileXORKey.inc'}
+        result := TOlfCryptDecrypt.XORCrypt(ParStream, Keys);
+      finally
+        ParStream.free;
+      end;
+    end;
+  ConfigFile.onDecryptProc := function(Const AStream: TStream): string
+    var
+      Keys: TByteDynArray;
+      Stream: TStream;
+      StringStream: TStringStream;
+    begin
+{$I '..\_PRIVATE\src\ConfigFileXORKey.inc'}
+      result := '';
+      Stream := TOlfCryptDecrypt.XORdeCrypt(AStream, Keys);
+      try
+        if assigned(Stream) and (Stream.Size > 0) then
+        begin
+          StringStream := TStringStream.Create;
+          try
+            Stream.Position := 0;
+            StringStream.CopyFrom(Stream);
+            result := StringStream.DataString;
+          finally
+            StringStream.free;
+          end;
+        end;
+      finally
+        Stream.free;
+      end;
+    end;
+{$ENDIF}
+  ConfigFile.load;
+end;
+
+{ tConfig }
+
+class procedure tConfig.Cancel;
+begin
+  ConfigFile.Cancel;
+end;
+
+class function tConfig.GetDefaultEndBackgroundImage: string;
+begin
+  result := ConfigFile.getValue('EndImg', CPageFinEpisode);
+end;
+
+class function tConfig.GetDefaultOverlayImage: string;
+begin
+  result := ConfigFile.getValue('OverImg', CPrecedemment);
+end;
+
+class function tConfig.GetDefaultStartBackgroundImage: string;
+begin
+  result := ConfigFile.getValue('StartImg', CPageIntro);
+end;
+
+class function tConfig.GetDefaultVideoDuration: integer;
+begin
+  result := ConfigFile.getValue('MvD', CDureeEpisodeEnMinutes);
+end;
+
+class function tConfig.GetDefaultVideoHeight: integer;
+begin
+  result := ConfigFile.getValue('MvH', CVideoHeight);
+end;
+
+class function tConfig.GetDefaultVideoWidth: integer;
+begin
+  result := ConfigFile.getValue('MvW', CVideoWidth);
+end;
+
+class function tConfig.GetFFmpegPath: string;
+begin
+  result := ConfigFile.getValue('FFmpeg', cffmpeg);
+end;
+
+class procedure tConfig.Save;
+begin
+  ConfigFile.Save;
+end;
+
+class procedure tConfig.SetDefaultEndBackgroundImage(const Value: string);
+begin
+  ConfigFile.setValue('EndImg', Value);
+end;
+
+class procedure tConfig.SetDefaultOverlayImage(const Value: string);
+begin
+  ConfigFile.setValue('OverImg', Value);
+end;
+
+class procedure tConfig.SetDefaultStartBackgroundImage(const Value: string);
+begin
+  ConfigFile.setValue('StartImg', Value);
+end;
+
+class procedure tConfig.SetDefaultVideoDuration(const Value: integer);
+begin
+  ConfigFile.setValue('MvD', Value);
+end;
+
+class procedure tConfig.SetDefaultVideoHeight(const Value: integer);
+begin
+  ConfigFile.setValue('MvH', Value);
+end;
+
+class procedure tConfig.SetDefaultVideoWidth(const Value: integer);
+begin
+  ConfigFile.setValue('MvW', Value);
+end;
+
+class procedure tConfig.SetFFmpegPath(const Value: string);
+begin
+  ConfigFile.setValue('FFmpeg', Value);
+end;
+
+initialization
+
+initConfig;
+
+finalization
+
+ConfigFile.free;
+
+end.
