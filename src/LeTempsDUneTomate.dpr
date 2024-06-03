@@ -16,7 +16,10 @@ uses
   Olf.RTL.Params in '..\lib-externes\librairies\src\Olf.RTL.Params.pas',
   uConfig in 'uConfig.pas',
   Olf.RTL.CryptDecrypt in '..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas',
-  uProject in 'uProject.pas';
+  uProject in 'uProject.pas',
+  uDB in '..\lib-externes\YTVideoSeries\src\uDB.pas' {db: TDataModule},
+  Olf.RTL.GenRandomID in '..\lib-externes\librairies\src\Olf.RTL.GenRandomID.pas',
+  YTVideoSeries.API in 'YTVideoSeries.API.pas';
 
 {$R *.res}
 
