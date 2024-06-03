@@ -775,6 +775,7 @@ begin
           procedure
           begin
             BlockScreen(false);
+            showmessage('Fin de traitement');
           end);
       end).Start;
   except
