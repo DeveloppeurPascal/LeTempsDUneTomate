@@ -10,3 +10,6 @@
 [submodule "lib-externes/Pic-Resize"]
 	path = lib-externes/Pic-Resize
 	url = https://github.com/DeveloppeurPascal/Pic-Resize.git
+[submodule "lib-externes/YTVideoSeries"]
+	path = lib-externes/YTVideoSeries
+	url = https://github.com/DeveloppeurPascal/YTVideoSeries.git
