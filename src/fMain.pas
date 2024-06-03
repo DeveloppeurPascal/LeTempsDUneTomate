@@ -796,6 +796,7 @@ begin
 
   AddLog('Saison ' + Saison.ToString + ' => ' +
     tpath.GetFileNameWithoutExtension(AFilePath), true);
+  AddLog(DateTimeToStr(now));
 
   Erreur := false;
   // - récupération de sa durée et découpage en N vidéo de 20 à 25 minutes pour ne pas avoir une vidéo de fin vide (ou cumuler la fin de la première avec le début de la suivante)
