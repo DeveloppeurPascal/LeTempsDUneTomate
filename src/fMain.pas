@@ -864,7 +864,8 @@ begin
   inc(Episode);
   lEpisode := Episode;
 
-  AddLog('Traitement épisode ' + Episode.ToString);
+  AddLog('Traitement épisode ' + Episode.ToString + ' (' +
+    DateTimeToStr(now) + ')');
 
   TempDir := tpath.Combine(tpath.GetDirectoryName(AFilePath), 'temp');
   if not TDirectory.Exists(TempDir) then
