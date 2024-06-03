@@ -53,10 +53,10 @@ const
   CDureeFin = 5;
 
   // TODO : supprimer ces constantes liées et les laisser en fenêtre d'option du programme
-  CFFmpeg = '/Users/patrickpremartin/LeTempsDUneTomate/ffmpeg';
-  CPrecedemment = '/Users/patrickpremartin/LeTempsDUneTomate/precedemment.png';
-  CPageIntro = '/Users/patrickpremartin/LeTempsDUneTomate/start-picture.png';
-  CPageFinEpisode = '/Users/patrickpremartin/LeTempsDUneTomate/end-picture.png';
+  CFFmpeg = '/Volumes/LeTempsDUneTomate/ffmpeg';
+  CPrecedemment = '/Volumes/LeTempsDUneTomate/precedemment.png';
+  CPageIntro = '/Volumes/LeTempsDUneTomate/start-picture.png';
+  CPageFinEpisode = '/Volumes/LeTempsDUneTomate/end-picture.png';
 
 implementation
 
