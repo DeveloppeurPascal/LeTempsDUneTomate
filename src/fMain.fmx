@@ -180,6 +180,7 @@ object frmMain: TfrmMain
       Size.Width = 748.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
+      TextPrompt = 'Title to use on generated pictures'
     end
     object edtVideoNamePrefixe: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -194,6 +195,7 @@ object frmMain: TfrmMain
       Size.Width = 748.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
+      TextPrompt = 'Movie filename prefix (must be globally unique)'
     end
     object edtImgBackgroundEnd: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -208,6 +210,7 @@ object frmMain: TfrmMain
       Size.Width = 748.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
+      TextPrompt = 'Background file path to use as the video end image'
       object edtImgBackgroundEndSelect: TEllipsesEditButton
         Touch.InteractiveGestures = [LongTap]
         CanFocus = False
@@ -233,6 +236,7 @@ object frmMain: TfrmMain
       Size.Width = 748.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
+      TextPrompt = 'File path for the "in previous video" overlay'
       object edtImgOverlaySelect: TEllipsesEditButton
         Touch.InteractiveGestures = [LongTap]
         CanFocus = False
@@ -258,6 +262,7 @@ object frmMain: TfrmMain
       Size.Width = 748.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
+      TextPrompt = 'Background file path to use as the video title image'
       object edtImgBackgroundStartSelect: TEllipsesEditButton
         Touch.InteractiveGestures = [LongTap]
         CanFocus = False
