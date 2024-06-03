@@ -770,7 +770,7 @@ begin
 
           TraiterLaSaison(VideoFilePath, Saison, Episode);
         end;
-        AddLog('Fin du traitement.', true);
+        AddLog('Fin du traitement.' + ' (' + DateTimeToStr(now) + ')', true);
         tthread.Queue(nil,
           procedure
           begin
