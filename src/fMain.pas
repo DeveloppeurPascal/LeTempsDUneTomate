@@ -81,13 +81,16 @@ type
     /// Traite une vidéo: fait son découpage en épisode
     /// </summary>
     procedure TraiterLaSaison(const AFilePath: string;
-      var Saison, Episode: integer);
+      var Saison, Episode: integer; const YTVS_TubeCode, YTVS_SerialCode
+      : integer);
     /// <summary>
     /// Traite un épisode extrait de la vidéo complète : création de la page de titre, de l'extrait, du raccourci, ...
     /// </summary>
     procedure TraiterLEpisode(const AFilePath: string; Const Saison: integer;
       var Episode: integer; const EpisodeDeLaSaison: integer;
-      const DureeEpisodeEnSecondes: int64);
+      const DureeEpisodeEnSecondes: int64;
+      const YTVS_TubeCode, YTVS_SeasonCode: integer;
+      const YTVS_RecordDate: string);
     /// <summary>
     /// Execute FFmpeg avec les paramètres passés le le chemin du fichier de destination à générer
     /// </summary>
@@ -163,7 +166,8 @@ uses
   u_urlOpen,
   udmAdobeStock_286917767,
   uConfig,
-  uProject;
+  uProject,
+  YTVideoSeries.API;
 
 type
   TBitmap = FMX.Graphics.TBitmap;
@@ -757,8 +761,15 @@ begin
       var
         VideoFilePath: string;
         Saison, Episode: integer;
+        YTVS_TubeCode, YTVS_SerialCode: integer;
       begin
         AddLog('Démarrage du traitement.', true);
+
+        YTVS_TubeCode := YTVideoSeries_GetTubeCode;
+        if (YTVS_TubeCode > 0) then
+          YTVS_SerialCode := YTVideoSeries_GetSerialCode(tproject.Title)
+        else
+          YTVS_SerialCode := -1;
         Saison := 0;
         Episode := 0;
         while (not tthread.CheckTerminated) do
@@ -768,7 +779,8 @@ begin
           if VideoFilePath.IsEmpty then
             break;
 
-          TraiterLaSaison(VideoFilePath, Saison, Episode);
+          TraiterLaSaison(VideoFilePath, Saison, Episode, YTVS_TubeCode,
+            YTVS_SerialCode);
         end;
         AddLog('Fin du traitement.' + ' (' + DateTimeToStr(now) + ')', true);
         tthread.Queue(nil,
@@ -784,19 +796,46 @@ begin
 end;
 
 procedure TfrmMain.TraiterLaSaison(const AFilePath: string;
-var Saison, Episode: integer);
-
+var Saison, Episode: integer; const YTVS_TubeCode, YTVS_SerialCode: integer);
 var
   Erreur: boolean;
   DureeTotaleEnSecondes, NbEpisodes, DureeEpisodeEnSecondes: int64;
   EpisodeDeLaSaison: integer;
   i: integer;
+  YTVS_SeasonCode, YTVS_EpisodeCode: integer;
+  YTVS_SeasonLabel, YTVS_RecordDate: string;
 begin
   inc(Saison);
 
   AddLog('Saison ' + Saison.ToString + ' => ' +
     tpath.GetFileNameWithoutExtension(AFilePath), true);
   AddLog(DateTimeToStr(now));
+
+  if (YTVS_SerialCode > 0) then
+  begin
+    YTVS_SeasonLabel := tpath.GetFileNameWithoutExtension(AFilePath);
+    YTVS_SeasonCode := YTVideoSeries_GetSeasonCode(YTVS_SerialCode,
+      YTVS_SeasonLabel);
+    if (YTVS_SeasonCode > 0) then
+    begin
+      YTVS_RecordDate := '';
+      for i := 1 to 8 do
+        if CharInSet(YTVS_SeasonLabel.Chars[i - 1], ['0' .. '9']) then
+          YTVS_RecordDate := YTVS_RecordDate + YTVS_SeasonLabel.Chars[i - 1]
+        else
+        begin
+          YTVS_RecordDate := '';
+          break;
+        end;
+      YTVideoSeries_UpdateSeason(YTVS_SeasonCode, Saison, YTVS_RecordDate);
+      // Crée un épisode pour la saison (en diffusion sur SerialStreameur en général)
+      YTVS_EpisodeCode := YTVideoSeries_GetEpisodeCode(YTVS_SeasonCode,
+        YTVS_SeasonLabel);
+      YTVideoSeries_UpdateEpisode(YTVS_EpisodeCode, 0, YTVS_RecordDate);
+    end;
+  end
+  else
+    YTVS_SeasonCode := -1;
 
   Erreur := false;
   // - récupération de sa durée et découpage en N vidéo de 20 à 25 minutes pour ne pas avoir une vidéo de fin vide (ou cumuler la fin de la première avec le début de la suivante)
@@ -850,17 +889,20 @@ begin
 
   for EpisodeDeLaSaison := 1 to NbEpisodes do
     TraiterLEpisode(AFilePath, Saison, Episode, EpisodeDeLaSaison,
-      DureeEpisodeEnSecondes);
+      DureeEpisodeEnSecondes, YTVS_TubeCode, YTVS_SeasonCode, YTVS_RecordDate);
 end;
 
 procedure TfrmMain.TraiterLEpisode(const AFilePath: string;
 Const Saison: integer; var Episode: integer; const EpisodeDeLaSaison: integer;
-const DureeEpisodeEnSecondes: int64);
+const DureeEpisodeEnSecondes: int64; const YTVS_TubeCode, YTVS_SeasonCode
+  : integer; const YTVS_RecordDate: string);
 var
   EpisodeFilePath, VersionCourteFilePath, EpisodeFinalFilePath,
     ImgStart1920FilePath, ImgStart1280FilePath, ImgEndFilePath: string;
   TempDir, FinalDir: string;
   lEpisode: integer;
+  YTVS_EpisodeCode: integer;
+  YTVS_EpisodeLabel: string;
 begin
   inc(Episode);
   lEpisode := Episode;
@@ -972,6 +1014,19 @@ begin
       '" -loop 1 -t ' + cdureefin.ToString + ' -i "' + ImgEndFilePath +
       '" -filter_complex ''concat=n=4;adelay=' + (cdureeintro + CDureeRecap)
       .ToString + 's:all=1''', EpisodeFinalFilePath);
+
+  if (YTVS_TubeCode > 0) and (YTVS_SeasonCode > 0) then
+  begin
+    YTVS_EpisodeLabel := tpath.GetFileNameWithoutExtension
+      (EpisodeFinalFilePath);
+    YTVS_EpisodeCode := YTVideoSeries_GetEpisodeCode(YTVS_SeasonCode,
+      YTVS_EpisodeLabel);
+    if (YTVS_EpisodeCode > 0) then
+    begin
+      YTVideoSeries_UpdateEpisode(YTVS_EpisodeCode, Episode, YTVS_RecordDate);
+      YTVideoSeries_CreateVideoTube(YTVS_EpisodeCode, YTVS_TubeCode);
+    end;
+  end;
 end;
 
 procedure TfrmMain.UpdateButtons;
