@@ -13,3 +13,6 @@
 [submodule "lib-externes/YTVideoSeries"]
 	path = lib-externes/YTVideoSeries
 	url = https://github.com/DeveloppeurPascal/YTVideoSeries.git
+[submodule "lib-externes/DOSCommand"]
+	path = lib-externes/DOSCommand
+	url = https://github.com/TurboPack/DOSCommand.git
