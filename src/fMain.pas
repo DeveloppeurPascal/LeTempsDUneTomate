@@ -576,8 +576,13 @@ begin
     'This software is supplied as is, with or without bugs. No warranty is offered '
     + 'as to its operation or the data processed. Make backups!';
   OlfAboutDialog1.Description.Text :=
-    'Program for cutting videos into 20-25 minute episodes in pomodoro mode.' +
-    slinebreak + slinebreak + '*****************' + slinebreak +
+    'The tomato''s time is an utility developed in Delphi and based on the FFmpeg '
+    + 'bookshop to cut long videos in series of 20 to 25 minutes (the time of a pomodoro, '
+    + 'hence its title). New videos are then composed of a starting image, an end image, '
+    + 'an excerpt from the previous video and the content of the current episode.'
+    + slinebreak + slinebreak +
+    'The whole works by using FFmpeg command line on videos stored in a folder.'
+    + slinebreak + slinebreak + '*****************' + slinebreak +
     '* Publisher info' + slinebreak + slinebreak +
     'This application was developed by Patrick Prémartin.' + slinebreak +
     slinebreak +
