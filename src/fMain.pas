@@ -48,16 +48,16 @@ type
     edtImgBackgroundStart: TEdit;
     lProject: TLayout;
     ToolBar1: TToolBar;
-    btnOpen: TButton;
+    btnOpenProject: TButton;
     btnQuit: TButton;
     btnAbout: TButton;
-    btnClose: TButton;
+    btnCloseProject: TButton;
     btnStart: TButton;
     lBlockScreen: TLayout;
     aniBlockScreen: TAniIndicator;
     rBlockScreen: TRectangle;
     GridPanelLayout1: TGridPanelLayout;
-    btnSave: TButton;
+    btnSaveProject: TButton;
     btnCancel: TButton;
     edtImgBackgroundStartSelect: TEllipsesEditButton;
     edtImgOverlaySelect: TEllipsesEditButton;
@@ -76,19 +76,22 @@ type
     mnuFileSave: TMenuItem;
     mnuFileClose: TMenuItem;
     mnuFileQuit: TMenuItem;
+    mnuProjectStart: TMenuItem;
     procedure OlfAboutDialog1URLClick(const AURL: string);
     procedure FormCreate(Sender: TObject);
     procedure btnQuitClick(Sender: TObject);
     procedure btnAboutClick(Sender: TObject);
-    procedure btnOpenClick(Sender: TObject);
-    procedure btnCloseClick(Sender: TObject);
+    procedure btnOpenProjectClick(Sender: TObject);
+    procedure btnCloseProjectClick(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure edtImgBackgroundStartSelectClick(Sender: TObject);
     procedure edtImgOverlaySelectClick(Sender: TObject);
     procedure edtImgBackgroundEndSelectClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
-    procedure btnSaveClick(Sender: TObject);
+    procedure btnSaveProjectClick(Sender: TObject);
+    procedure mnuProjectOptionsClick(Sender: TObject);
+    procedure mnuToolsOptionsClick(Sender: TObject);
   private
   protected
     /// <summary>
@@ -249,7 +252,7 @@ begin
   InitProjectOnScreen;
 end;
 
-procedure TfrmMain.btnCloseClick(Sender: TObject);
+procedure TfrmMain.btnCloseProjectClick(Sender: TObject);
 begin
   tproject.Close;
   InitProjectOnScreen;
@@ -257,7 +260,7 @@ begin
   UpdateButtons;
 end;
 
-procedure TfrmMain.btnOpenClick(Sender: TObject);
+procedure TfrmMain.btnOpenProjectClick(Sender: TObject);
 begin
   if OlfSelectDirectoryDialog1.Execute and
     TDirectory.Exists(OlfSelectDirectoryDialog1.Directory) then
@@ -274,7 +277,7 @@ begin
   Close;
 end;
 
-procedure TfrmMain.btnSaveClick(Sender: TObject);
+procedure TfrmMain.btnSaveProjectClick(Sender: TObject);
 begin
   tproject.Title := edtTitle.Text;
   tproject.VideoFilePrefix := edtVideoNamePrefixe.Text;
@@ -640,6 +643,16 @@ begin
   end
   else
     lProject.Visible := false;
+end;
+
+procedure TfrmMain.mnuProjectOptionsClick(Sender: TObject);
+begin
+  // TODO : à compléter
+end;
+
+procedure TfrmMain.mnuToolsOptionsClick(Sender: TObject);
+begin
+  // TODO : à compléter
 end;
 
 procedure TfrmMain.ExecuteFFmpegAndWait(const AParams,
@@ -1050,9 +1063,14 @@ end;
 
 procedure TfrmMain.UpdateButtons;
 begin
-  btnOpen.Visible := not tproject.isOpened;
-  btnStart.Visible := not btnOpen.Visible;
-  btnClose.Visible := not btnOpen.Visible;
+  btnOpenProject.Visible := not tproject.isOpened;
+  btnStart.Visible := not btnOpenProject.Visible;
+  btnCloseProject.Visible := not btnOpenProject.Visible;
+
+  mnuFileOpen.Enabled := btnOpenProject.Visible;
+  mnuProjectStart.Enabled := btnStart.Visible;
+  mnuFileSave.Enabled := btnCloseProject.Visible;
+  mnuFileClose.Enabled := btnCloseProject.Visible;
 end;
 
 initialization

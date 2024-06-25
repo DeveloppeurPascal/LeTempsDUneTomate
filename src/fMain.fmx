@@ -39,7 +39,7 @@ object frmMain: TfrmMain
     Size.Height = 40.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
-    object btnOpen: TButton
+    object btnOpenProject: TButton
       Align = MostLeft
       Margins.Left = 5.000000000000000000
       Margins.Top = 5.000000000000000000
@@ -53,7 +53,7 @@ object frmMain: TfrmMain
       TabOrder = 0
       Text = 'Open'
       TextSettings.Trimming = None
-      OnClick = btnOpenClick
+      OnClick = btnOpenProjectClick
     end
     object btnQuit: TButton
       Align = MostRight
@@ -87,7 +87,7 @@ object frmMain: TfrmMain
       TextSettings.Trimming = None
       OnClick = btnAboutClick
     end
-    object btnClose: TButton
+    object btnCloseProject: TButton
       Align = MostLeft
       Margins.Left = 5.000000000000000000
       Margins.Top = 5.000000000000000000
@@ -101,7 +101,7 @@ object frmMain: TfrmMain
       TabOrder = 1
       Text = 'Close'
       TextSettings.Trimming = None
-      OnClick = btnCloseClick
+      OnClick = btnCloseProjectClick
     end
     object btnStart: TButton
       Align = Left
@@ -293,7 +293,7 @@ object frmMain: TfrmMain
       ControlCollection = <
         item
           Column = 0
-          Control = btnSave
+          Control = btnSaveProject
           Row = 0
         end
         item
@@ -305,7 +305,7 @@ object frmMain: TfrmMain
         item
           Value = 100.000000000000000000
         end>
-      object btnSave: TButton
+      object btnSaveProject: TButton
         Align = Client
         Margins.Left = 5.000000000000000000
         Margins.Top = 5.000000000000000000
@@ -317,7 +317,7 @@ object frmMain: TfrmMain
         TabOrder = 0
         Text = 'Save'
         TextSettings.Trimming = None
-        OnClick = btnSaveClick
+        OnClick = btnSaveProjectClick
       end
       object btnCancel: TButton
         Align = Client
@@ -355,28 +355,38 @@ object frmMain: TfrmMain
         Locked = True
         ShortCut = 16463
         Text = '&Open'
+        OnClick = btnOpenProjectClick
       end
       object mnuFileSave: TMenuItem
         Locked = True
         ShortCut = 16467
         Text = '&Save'
+        OnClick = btnSaveProjectClick
       end
       object mnuFileClose: TMenuItem
         Locked = True
         StyleLookup = 'Ctrl+F4'
         Text = '&Close'
+        OnClick = btnCloseProjectClick
       end
       object mnuFileQuit: TMenuItem
         Locked = True
         ShortCut = 32883
         Text = '&Quit'
+        OnClick = btnQuitClick
       end
     end
     object mnuProject: TMenuItem
       Text = '&Project'
+      object mnuProjectStart: TMenuItem
+        Locked = True
+        Text = '&Start'
+        OnClick = btnStartClick
+      end
       object mnuProjectOptions: TMenuItem
         Locked = True
         Text = '&Options'
+        OnClick = mnuProjectOptionsClick
       end
     end
     object mnuTools: TMenuItem
@@ -384,6 +394,7 @@ object frmMain: TfrmMain
       object mnuToolsOptions: TMenuItem
         Locked = True
         Text = '&Options'
+        OnClick = mnuToolsOptionsClick
       end
     end
     object mnuHelp: TMenuItem
@@ -391,6 +402,7 @@ object frmMain: TfrmMain
       object mnuHelpAbout: TMenuItem
         Locked = True
         Text = '&About'
+        OnClick = btnAboutClick
       end
     end
   end
