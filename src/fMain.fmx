@@ -23,6 +23,7 @@ object frmMain: TfrmMain
       item
       end>
     Images = dmLogo.imgLogo
+    ImageIndex = 0
     URL = 'https://github.com/DeveloppeurPascal/LeTempsDUneTomate'
     onURLClick = OlfAboutDialog1URLClick
     Copyright = '(c) 2024 Patrick Pr'#233'martin'
