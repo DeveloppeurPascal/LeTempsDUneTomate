@@ -185,7 +185,8 @@ uses
   udmAdobeStock_286917767,
   uConfig,
   uProject,
-  YTVideoSeries.API;
+  YTVideoSeries.API,
+  fOptions;
 
 type
   TBitmap = FMX.Graphics.TBitmap;
@@ -667,8 +668,15 @@ begin
 end;
 
 procedure TfrmMain.mnuToolsOptionsClick(Sender: TObject);
+var
+  frm: TFrmOptions;
 begin
-  // TODO : à compléter
+  frm := TFrmOptions.create(self);
+  try
+    frm.ShowModal;
+  finally
+    frm.free;
+  end;
 end;
 
 procedure TfrmMain.ExecuteFFmpegAndWait(const AParams,
