@@ -93,6 +93,7 @@ type
     procedure mnuProjectOptionsClick(Sender: TObject);
     procedure mnuToolsOptionsClick(Sender: TObject);
   private
+    procedure InitMainMenuForMacOS;
   protected
     /// <summary>
     /// Traite une vidéo: fait son découpage en épisode
@@ -630,6 +631,21 @@ begin
     OlfAboutDialog1.VersionNumero;
 end;
 
+procedure TfrmMain.InitMainMenuForMacOS;
+begin
+{$IFDEF MACOS}
+  mnuMacOS.Visible := true;
+  mnuFileQuit.shortcut := scCommand + ord('Q'); // 4177;
+  mnuHelpAbout.parent := mnuMacOS;
+  mnuHelp.Visible := (mnuHelp.children[0].childrencount > 0);
+  mnuToolsOptions.parent := mnuMacOS;
+  mnuTools.Visible := (mnuTools.children[0].childrencount > 0);
+{$ELSE}
+  mnuMacOS.Visible := false;
+{$ENDIF}
+  mnuHelpAbout.Text := '&About ' + OlfAboutDialog1.Titre;
+end;
+
 procedure TfrmMain.InitProjectOnScreen;
 begin
   if tproject.isOpened then
@@ -694,6 +710,7 @@ begin
   InitMainFormCaption;
   InitAboutDialogDescriptionAndLicense;
   UpdateButtons;
+  InitMainMenuForMacOS;
   InitProjectOnScreen;
 end;
 

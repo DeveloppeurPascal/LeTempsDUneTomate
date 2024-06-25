@@ -365,7 +365,7 @@ object frmMain: TfrmMain
       end
       object mnuFileClose: TMenuItem
         Locked = True
-        StyleLookup = 'Ctrl+F4'
+        ShortCut = 16499
         Text = '&Close'
         OnClick = btnCloseProjectClick
       end
