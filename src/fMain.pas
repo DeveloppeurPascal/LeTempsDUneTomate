@@ -1068,6 +1068,7 @@ begin
   btnCloseProject.Visible := not btnOpenProject.Visible;
 
   mnuFileOpen.Enabled := btnOpenProject.Visible;
+  mnuProject.Enabled := not mnuFileOpen.Enabled;
   mnuProjectStart.Enabled := btnStart.Visible;
   mnuFileSave.Enabled := btnCloseProject.Visible;
   mnuFileClose.Enabled := btnCloseProject.Visible;
