@@ -34,6 +34,7 @@ Ce projet utilise des dépendances sous forme de sous modules. Ils seront absent
 * [DeveloppeurPascal/Delphi-FMXExtend-Library](https://github.com/DeveloppeurPascal/Delphi-FMXExtend-Library) doit être installé dans le sous dossier ./lib-externes/Delphi-FMXExtend-Library
 * [DeveloppeurPascal/librairies](https://github.com/DeveloppeurPascal/librairies) doit être installé dans le sous dossier ./lib-externes/librairies
 * [DeveloppeurPascal/Pic-Resize](https://github.com/DeveloppeurPascal/Pic-Resize) doit être installé dans le sous dossier ./lib-externes/Pic-Resize
+* [DeveloppeurPascal/Video-Title-Page-Generator](https://github.com/DeveloppeurPascal/Video-Title-Page-Generator) doit être installé dans le sous dossier ./lib-externes/Video-Title-Page-Generator
 * [DeveloppeurPascal/YTVideoSeries](https://github.com/DeveloppeurPascal/YTVideoSeries) doit être installé dans le sous dossier ./lib-externes/YTVideoSeries
 * [TurboPack/DOSCommand](https://github.com/TurboPack/DOSCommand) doit être installé dans le sous dossier ./lib-externes/DOSCommand
 
