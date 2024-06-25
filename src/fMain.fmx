@@ -340,7 +340,58 @@ object frmMain: TfrmMain
       'Images (*.jpg, *.png)|*.png;*.jpg|Images JPEG|*.jpg|Images PNG|*' +
       '.png'
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
-    Left = 368
-    Top = 288
+    Left = 160
+    Top = 296
+  end
+  object MainMenu1: TMainMenu
+    Left = 248
+    Top = 296
+    object mnuMacOS: TMenuItem
+      Text = 'mnuMacOS'
+    end
+    object mnuFile: TMenuItem
+      Text = '&File'
+      object mnuFileOpen: TMenuItem
+        Locked = True
+        ShortCut = 16463
+        Text = '&Open'
+      end
+      object mnuFileSave: TMenuItem
+        Locked = True
+        ShortCut = 16467
+        Text = '&Save'
+      end
+      object mnuFileClose: TMenuItem
+        Locked = True
+        StyleLookup = 'Ctrl+F4'
+        Text = '&Close'
+      end
+      object mnuFileQuit: TMenuItem
+        Locked = True
+        ShortCut = 32883
+        Text = '&Quit'
+      end
+    end
+    object mnuProject: TMenuItem
+      Text = '&Project'
+      object mnuProjectOptions: TMenuItem
+        Locked = True
+        Text = '&Options'
+      end
+    end
+    object mnuTools: TMenuItem
+      Text = '&Tools'
+      object mnuToolsOptions: TMenuItem
+        Locked = True
+        Text = '&Options'
+      end
+    end
+    object mnuHelp: TMenuItem
+      Text = '&Help'
+      object mnuHelpAbout: TMenuItem
+        Locked = True
+        Text = '&About'
+      end
+    end
   end
 end

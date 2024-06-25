@@ -32,7 +32,8 @@ uses
   FMX.Objects,
   FMX.Layouts,
   FMX.Edit,
-  uDMLogo;
+  uDMLogo,
+  FMX.Menus;
 
 type
   TfrmMain = class(TForm)
@@ -62,6 +63,19 @@ type
     edtImgOverlaySelect: TEllipsesEditButton;
     edtImgBackgroundEndSelect: TEllipsesEditButton;
     OpenDialog1: TOpenDialog;
+    MainMenu1: TMainMenu;
+    mnuMacOS: TMenuItem;
+    mnuFile: TMenuItem;
+    mnuProject: TMenuItem;
+    mnuTools: TMenuItem;
+    mnuHelp: TMenuItem;
+    mnuHelpAbout: TMenuItem;
+    mnuToolsOptions: TMenuItem;
+    mnuProjectOptions: TMenuItem;
+    mnuFileOpen: TMenuItem;
+    mnuFileSave: TMenuItem;
+    mnuFileClose: TMenuItem;
+    mnuFileQuit: TMenuItem;
     procedure OlfAboutDialog1URLClick(const AURL: string);
     procedure FormCreate(Sender: TObject);
     procedure btnQuitClick(Sender: TObject);
