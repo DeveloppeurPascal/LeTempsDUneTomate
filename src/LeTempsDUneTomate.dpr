@@ -19,7 +19,8 @@ uses
   uProject in 'uProject.pas',
   uDB in '..\lib-externes\YTVideoSeries\src\uDB.pas' {db: TDataModule},
   Olf.RTL.GenRandomID in '..\lib-externes\librairies\src\Olf.RTL.GenRandomID.pas',
-  YTVideoSeries.API in 'YTVideoSeries.API.pas';
+  YTVideoSeries.API in 'YTVideoSeries.API.pas',
+  fOptions in 'fOptions.pas' {frmOptions};
 
 {$R *.res}
 

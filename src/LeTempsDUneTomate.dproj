@@ -434,6 +434,10 @@
         </DCCReference>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.GenRandomID.pas"/>
         <DCCReference Include="YTVideoSeries.API.pas"/>
+        <DCCReference Include="fOptions.pas">
+            <Form>frmOptions</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -572,6 +576,12 @@
                 </DeployFile>
                 <DeployFile LocalName="OSX64\Debug\LeTempsDUneTomate" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="OSX64">
+                        <RemoteName>LeTempsDUneTomate</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\LeTempsDUneTomate.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                    <Platform Name="OSXARM64">
                         <RemoteName>LeTempsDUneTomate</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
