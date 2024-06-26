@@ -1,4 +1,4 @@
-# 20240604 - [DeveloppeurPascal](https://github.com/XXX_USER_XXX)
+# 20240604 - [DeveloppeurPascal](https://github.com/DeveloppeurPascal)
 
 * ajout du projet "YT Video Series" comme sous module pour en utiliser la base de données (puis plus tard l'API)
 * mise à jour des chemins en dur pour l'accès à ffmpeg sur mon mac et aux fichiers par défaut (images start/end/overlay)
