@@ -19,21 +19,45 @@ type
     class function GetDefaultVideoWidth: integer; static;
     class function GetFFmpegPath: string; static;
     class procedure SetFFmpegPath(const Value: string); static;
+    class function GetDefaultEndBackgroundImageDuration: integer; static;
+    class function GetDefaultPreviouslyDuration: integer; static;
+    class function GetDefaultStartBackgroundImageDuration: integer; static;
+    class procedure SetDefaultEndBackgroundImageDuration
+      (const Value: integer); static;
+    class procedure SetDefaultPreviouslyDuration(const Value: integer); static;
+    class procedure SetDefaultStartBackgroundImageDuration
+      (const Value: integer); static;
+    class function GetDefaultAndNowDuration: integer; static;
+    class procedure SetDefaultAndNowDuration(const Value: integer); static;
+    class function GetDefaultVideoFPS: integer; static;
+    class procedure SetDefaultVideoFPS(const Value: integer); static;
   protected
   public
     class property FFmpegPath: string read GetFFmpegPath write SetFFmpegPath;
     class property DefaultStartBackgroundImage: string
       read GetDefaultStartBackgroundImage write SetDefaultStartBackgroundImage;
+    class property DefaultStartBackgroundImageDuration: integer
+      read GetDefaultStartBackgroundImageDuration
+      write SetDefaultStartBackgroundImageDuration;
     class property DefaultEndBackgroundImage: string
       read GetDefaultEndBackgroundImage write SetDefaultEndBackgroundImage;
+    class property DefaultEndBackgroundImageDuration: integer
+      read GetDefaultEndBackgroundImageDuration
+      write SetDefaultEndBackgroundImageDuration;
     class property DefaultOverlayImage: string read GetDefaultOverlayImage
       write SetDefaultOverlayImage;
     class property DefaultVideoDuration: integer read GetDefaultVideoDuration
       write SetDefaultVideoDuration;
+    class property DefaultPreviouslyDuration: integer
+      read GetDefaultPreviouslyDuration write SetDefaultPreviouslyDuration;
+    class property DefaultAndNowDuration: integer read GetDefaultAndNowDuration
+      write SetDefaultAndNowDuration;
     class property DefaultVideoWidth: integer read GetDefaultVideoWidth
       write SetDefaultVideoWidth;
     class property DefaultVideoHeight: integer read GetDefaultVideoHeight
       write SetDefaultVideoHeight;
+    class property DefaultVideoFPS: integer read GetDefaultVideoFPS
+      write SetDefaultVideoFPS;
     class procedure Save;
     class procedure Cancel;
   end;
@@ -106,24 +130,49 @@ begin
   ConfigFile.Cancel;
 end;
 
+class function tConfig.GetDefaultAndNowDuration: integer;
+begin
+  result := ConfigFile.getValue('ReplayAndNowD', CDureePreviouslyAndNow);
+end;
+
 class function tConfig.GetDefaultEndBackgroundImage: string;
 begin
-  result := ConfigFile.getValue('EndImg', CPageFinEpisode);
+  result := ConfigFile.getValue('EndImg', '');
+end;
+
+class function tConfig.GetDefaultEndBackgroundImageDuration: integer;
+begin
+  result := ConfigFile.getValue('EndImgD', CDureeFin);
 end;
 
 class function tConfig.GetDefaultOverlayImage: string;
 begin
-  result := ConfigFile.getValue('OverImg', CPrecedemment);
+  result := ConfigFile.getValue('OverImg', '');
+end;
+
+class function tConfig.GetDefaultPreviouslyDuration: integer;
+begin
+  result := ConfigFile.getValue('ReplayPrevD', CDureePreviously);
 end;
 
 class function tConfig.GetDefaultStartBackgroundImage: string;
 begin
-  result := ConfigFile.getValue('StartImg', CPageIntro);
+  result := ConfigFile.getValue('StartImg', '');
+end;
+
+class function tConfig.GetDefaultStartBackgroundImageDuration: integer;
+begin
+  result := ConfigFile.getValue('StartImgD', CDureeIntro);
 end;
 
 class function tConfig.GetDefaultVideoDuration: integer;
 begin
   result := ConfigFile.getValue('MvD', CDureeEpisodeEnMinutes);
+end;
+
+class function tConfig.GetDefaultVideoFPS: integer;
+begin
+  result := ConfigFile.getValue('VidFPS', CVideoFPS);
 end;
 
 class function tConfig.GetDefaultVideoHeight: integer;
@@ -138,7 +187,7 @@ end;
 
 class function tConfig.GetFFmpegPath: string;
 begin
-  result := ConfigFile.getValue('FFmpeg', cffmpeg);
+  result := ConfigFile.getValue('FFmpeg', '');
 end;
 
 class procedure tConfig.Save;
@@ -146,9 +195,20 @@ begin
   ConfigFile.Save;
 end;
 
+class procedure tConfig.SetDefaultAndNowDuration(const Value: integer);
+begin
+  ConfigFile.setValue('ReplayAndNowD', Value);
+end;
+
 class procedure tConfig.SetDefaultEndBackgroundImage(const Value: string);
 begin
   ConfigFile.setValue('EndImg', Value);
+end;
+
+class procedure tConfig.SetDefaultEndBackgroundImageDuration
+  (const Value: integer);
+begin
+  ConfigFile.setValue('EndImgD', Value);
 end;
 
 class procedure tConfig.SetDefaultOverlayImage(const Value: string);
@@ -156,14 +216,30 @@ begin
   ConfigFile.setValue('OverImg', Value);
 end;
 
+class procedure tConfig.SetDefaultPreviouslyDuration(const Value: integer);
+begin
+  ConfigFile.setValue('ReplayPrevD', Value);
+end;
+
 class procedure tConfig.SetDefaultStartBackgroundImage(const Value: string);
 begin
   ConfigFile.setValue('StartImg', Value);
 end;
 
+class procedure tConfig.SetDefaultStartBackgroundImageDuration
+  (const Value: integer);
+begin
+  ConfigFile.setValue('StartImgD', Value);
+end;
+
 class procedure tConfig.SetDefaultVideoDuration(const Value: integer);
 begin
   ConfigFile.setValue('MvD', Value);
+end;
+
+class procedure tConfig.SetDefaultVideoFPS(const Value: integer);
+begin
+  ConfigFile.setValue('VidFPS', Value);
 end;
 
 class procedure tConfig.SetDefaultVideoHeight(const Value: integer);
