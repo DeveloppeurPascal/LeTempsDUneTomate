@@ -434,6 +434,10 @@
         </DCCReference>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.GenRandomID.pas"/>
         <DCCReference Include="YTVideoSeries.API.pas"/>
+        <DCCReference Include="fProjectOptions.pas">
+            <Form>frmProjectOptions</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <DCCReference Include="fOptions.pas">
             <Form>frmOptions</Form>
             <FormType>fmx</FormType>
