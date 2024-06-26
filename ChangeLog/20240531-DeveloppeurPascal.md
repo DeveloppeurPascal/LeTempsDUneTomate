@@ -1,4 +1,4 @@
-# 20240531 - [DeveloppeurPascal](https://github.com/XXX_USER_XXX)
+# 20240531 - [DeveloppeurPascal](https://github.com/DeveloppeurPascal)
 
 * mise à jour des dépendances
 * correction de la réactivation de l'interface en fin de traitement d'une liste de fichiers
