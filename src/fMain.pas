@@ -84,7 +84,6 @@ type
     procedure btnOpenProjectClick(Sender: TObject);
     procedure btnCloseProjectClick(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure edtImgBackgroundStartSelectClick(Sender: TObject);
     procedure edtImgOverlaySelectClick(Sender: TObject);
     procedure edtImgBackgroundEndSelectClick(Sender: TObject);
@@ -92,8 +91,11 @@ type
     procedure btnSaveProjectClick(Sender: TObject);
     procedure mnuProjectOptionsClick(Sender: TObject);
     procedure mnuToolsOptionsClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     procedure InitMainMenuForMacOS;
+    procedure InitProjectFields;
+    function ProjectFieldsHasChanged: Boolean;
   protected
     /// <summary>
     /// Traite une vidéo: fait son découpage en épisode
@@ -135,7 +137,7 @@ type
     /// <summary>
     /// Ajoute le texte dans le TMemo à l'écran en guise d'historique (en faisant attention aux threads)
     /// </summary>
-    procedure AddLog(Text: string; isTitle: boolean = false);
+    procedure AddLog(Text: string; isTitle: Boolean = false);
     /// <summary>
     /// Retourne le chemin vers la vidéo avec overlay "précédemment" depuis le chemin d'un épisode
     /// </summary>
@@ -159,7 +161,7 @@ type
     procedure PicResize(const FromFilePath, ToFilePath: string;
       const NewWidth: integer = -1; const NewHeight: integer = -1);
     procedure UpdateButtons;
-    procedure BlockScreen(Const AEnabled: boolean);
+    procedure BlockScreen(Const AEnabled: Boolean);
     procedure InitProjectOnScreen;
   end;
 
@@ -186,7 +188,8 @@ uses
   uProject,
   YTVideoSeries.API,
   fOptions,
-  fProjectOptions;
+  fProjectOptions,
+  FMX.DialogService;
 
 type
   TBitmap = FMX.Graphics.TBitmap;
@@ -194,7 +197,7 @@ type
 var
   VideosATraiter: TQueue<string>;
 
-procedure TfrmMain.AddLog(Text: string; isTitle: boolean);
+procedure TfrmMain.AddLog(Text: string; isTitle: Boolean);
 begin
   tthread.Queue(nil,
     procedure
@@ -225,7 +228,7 @@ begin
     '" ajouté à la file d''attente.');
 end;
 
-procedure TfrmMain.BlockScreen(const AEnabled: boolean);
+procedure TfrmMain.BlockScreen(const AEnabled: Boolean);
 begin
   if AEnabled then
   begin
@@ -251,15 +254,43 @@ end;
 
 procedure TfrmMain.btnCancelClick(Sender: TObject);
 begin
-  InitProjectOnScreen;
+  InitProjectFields;
 end;
 
 procedure TfrmMain.btnCloseProjectClick(Sender: TObject);
 begin
-  tproject.Close;
-  InitProjectOnScreen;
+  if tproject.isOpened and ProjectFieldsHasChanged then
+  begin
+    TDialogService.MessageDialog
+      ('Do you want to save your changes before closing ?',
+      tmsgdlgtype.mtConfirmation, mbyesno, tmsgdlgbtn.mbYes, 0,
+      procedure(const AModalResult: TModalResult)
+      begin
+        case AModalResult of
+          mryes:
+            tthread.forcequeue(nil,
+              procedure
+              begin
+                btnSaveProjectClick(Sender);
+                btnCloseProjectClick(Sender);
+              end);
+        else
+          tthread.forcequeue(nil,
+            procedure
+            begin
+              btnCancelClick(Sender);
+              btnCloseProjectClick(Sender);
+            end);
+        end;
+      end);
+  end
+  else
+  begin
+    tproject.Close;
+    InitProjectOnScreen;
 
-  UpdateButtons;
+    UpdateButtons;
+  end;
 end;
 
 procedure TfrmMain.btnOpenProjectClick(Sender: TObject);
@@ -287,6 +318,8 @@ begin
   tproject.OverlayImage := edtImgOverlay.Text;
   tproject.EndBackgroundImage := edtImgBackgroundEnd.Text;
   tproject.save;
+
+  InitProjectFields;
 end;
 
 procedure TfrmMain.btnStartClick(Sender: TObject);
@@ -294,8 +327,12 @@ var
   VideoFiles: TStringDynArray;
   i: integer;
 begin
+  if ProjectFieldsHasChanged then
+    raise exception.create
+      ('You have unsaved changes on the project, save or cancel them before starting.');
+
   VideoFiles := TDirectory.GetFiles(tproject.GetFolder,
-    function(const Path: string; const SearchRec: TSearchRec): boolean
+    function(const Path: string; const SearchRec: TSearchRec): Boolean
     begin
       result := string(SearchRec.Name).tolower.EndsWith('.mp4');
     end);
@@ -652,14 +689,29 @@ begin
   if tproject.isOpened then
   begin
     lProject.Visible := true;
-    edtTitle.Text := tproject.Title;
-    edtVideoNamePrefixe.Text := tproject.VideoFilePrefix;
-    edtImgBackgroundStart.Text := tproject.StartBackgroundImage;
-    edtImgOverlay.Text := tproject.OverlayImage;
-    edtImgBackgroundEnd.Text := tproject.EndBackgroundImage;
+    InitProjectFields;
   end
   else
     lProject.Visible := false;
+end;
+
+procedure TfrmMain.InitProjectFields;
+var
+  i: integer;
+  e: TEdit;
+begin
+  edtTitle.TagString := tproject.Title;
+  edtVideoNamePrefixe.TagString := tproject.VideoFilePrefix;
+  edtImgBackgroundStart.TagString := tproject.StartBackgroundImage;
+  edtImgOverlay.TagString := tproject.OverlayImage;
+  edtImgBackgroundEnd.TagString := tproject.EndBackgroundImage;
+
+  for i := 0 to lProject.childrencount - 1 do
+    if lProject.children[i] is TEdit then
+    begin
+      e := lProject.children[i] as TEdit;
+      e.Text := e.TagString;
+    end;
 end;
 
 procedure TfrmMain.mnuProjectOptionsClick(Sender: TObject);
@@ -713,10 +765,41 @@ begin
 {$ENDIF}
 end;
 
-procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  if tproject.isOpened then
-    tproject.Close;
+  if tproject.isOpened and ProjectFieldsHasChanged then
+  begin
+    CanClose := false;
+    TDialogService.MessageDialog
+      ('Do you want to save your changes before closing ?',
+      tmsgdlgtype.mtConfirmation, mbyesno, tmsgdlgbtn.mbYes, 0,
+      procedure(const AModalResult: TModalResult)
+      begin
+        case AModalResult of
+          mryes:
+            tthread.forcequeue(nil,
+              procedure
+              begin
+                btnSaveProjectClick(Sender);
+                Close;
+              end);
+        else
+          tthread.forcequeue(nil,
+            procedure
+            begin
+              btnCancelClick(Sender);
+              Close;
+            end);
+        end;
+      end);
+  end
+  else
+  begin
+    if tproject.isOpened then
+      tproject.Close;
+
+    CanClose := true;
+  end;
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
@@ -741,7 +824,7 @@ var
   ratiow, ratioh, ratio: single;
   w, h: integer;
   x, y: integer;
-  ChangeLargeur, ChangeHauteur: boolean;
+  ChangeLargeur, ChangeHauteur: Boolean;
 begin
   if not tfile.Exists(FromFilePath) then
     Exit;
@@ -795,6 +878,26 @@ begin
   finally
     FreeAndNil(btm1);
   end;
+end;
+
+function TfrmMain.ProjectFieldsHasChanged: Boolean;
+var
+  i: integer;
+  e: TEdit;
+begin
+  result := false;
+
+  if not tproject.isOpened then
+    Exit;
+
+  for i := 0 to lProject.childrencount - 1 do
+    if lProject.children[i] is TEdit then
+    begin
+      e := lProject.children[i] as TEdit;
+      result := e.TagString <> e.Text;
+      if result then
+        break;
+    end;
 end;
 
 function TfrmMain.SecondesToHHMMSS(const DureeEnSecondes: int64): string;
@@ -862,7 +965,7 @@ end;
 procedure TfrmMain.TraiterLaSaison(const AFilePath: string;
 var Saison, Episode: integer; const YTVS_TubeCode, YTVS_SerialCode: integer);
 var
-  Erreur: boolean;
+  Erreur: Boolean;
   DureeTotaleEnSecondes, NbEpisodes, DureeEpisodeEnSecondes: int64;
   EpisodeDeLaSaison: integer;
   i: integer;
