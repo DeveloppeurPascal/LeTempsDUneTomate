@@ -17,24 +17,25 @@ object frmOptions: TfrmOptions
     Size.Height = 420.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
-    Viewport.Width = 640.000000000000000000
+    Viewport.Width = 624.000000000000000000
     Viewport.Height = 420.000000000000000000
     object lblFFmpegPath: TLabel
       Align = Top
+      FocusControl = edtFFmpegPath
       Margins.Left = 10.000000000000000000
       Margins.Top = 10.000000000000000000
       Margins.Right = 10.000000000000000000
       Margins.Bottom = 5.000000000000000000
       Position.X = 10.000000000000000000
       Position.Y = 10.000000000000000000
-      Size.Width = 620.000000000000000000
+      Size.Width = 604.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       Text = 'Path to FFmpeg'
-      TabOrder = 2
+      TabOrder = 0
       object btnFFmpegDownload: TButton
         Align = Right
-        Position.X = 540.000000000000000000
+        Position.X = 524.000000000000000000
         Size.Width = 80.000000000000000000
         Size.Height = 17.000000000000000000
         Size.PlatformDefault = False
@@ -54,7 +55,7 @@ object frmOptions: TfrmOptions
       Margins.Top = 5.000000000000000000
       Margins.Right = 10.000000000000000000
       Margins.Bottom = 10.000000000000000000
-      Size.Width = 620.000000000000000000
+      Size.Width = 604.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
       object btnFFmpegPathChoose: TEllipsesEditButton
@@ -67,6 +68,358 @@ object frmOptions: TfrmOptions
         Size.PlatformDefault = False
         TabOrder = 0
         OnClick = btnFFmpegPathChooseClick
+      end
+    end
+    object lblVideoFPS: TLabel
+      Align = Top
+      FocusControl = edtVideoFPS
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 769.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default video FPS'
+      TabOrder = 22
+    end
+    object edtVideoFPS: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 23
+      Position.X = 10.000000000000000000
+      Position.Y = 796.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblVideoHeight: TLabel
+      Align = Top
+      FocusControl = edtVideoHeight
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 700.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default video height'
+      TabOrder = 20
+    end
+    object edtVideoHeight: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 21
+      Position.X = 10.000000000000000000
+      Position.Y = 727.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblVideoWidth: TLabel
+      Align = Top
+      FocusControl = edtVideoWidth
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 631.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default video width'
+      TabOrder = 18
+    end
+    object edtVideoWidth: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 19
+      Position.X = 10.000000000000000000
+      Position.Y = 658.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblEndBackgroundImageDuration: TLabel
+      Align = Top
+      FocusControl = edtEndBackgroundImageDuration
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 562.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default end duration (in seconds)'
+      TabOrder = 16
+    end
+    object edtEndBackgroundImageDuration: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 17
+      Position.X = 10.000000000000000000
+      Position.Y = 589.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblEndBackgroundImagePath: TLabel
+      Align = Top
+      FocusControl = edtEndBackgroundImagePath
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 493.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default end image background path'
+      TabOrder = 14
+    end
+    object edtEndBackgroundImagePath: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 15
+      Position.X = 10.000000000000000000
+      Position.Y = 520.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      object btnEndBackgroundImagePathChoose: TEllipsesEditButton
+        Touch.InteractiveGestures = [LongTap]
+        CanFocus = False
+        Cursor = crArrow
+        TextSettings.Trimming = None
+        Size.Width = 28.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = btnEndBackgroundImagePathChooseClick
+      end
+    end
+    object lblVideoDuration: TLabel
+      Align = Top
+      FocusControl = edtVideoDuration
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 424.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default video duration (in minutes)'
+      TabOrder = 12
+    end
+    object edtVideoDuration: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 13
+      Position.X = 10.000000000000000000
+      Position.Y = 451.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblAndNowDuration: TLabel
+      Align = Top
+      FocusControl = edtAndNowDuration
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 355.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default previous video "and now" duration (in seconds)'
+      TabOrder = 10
+    end
+    object edtAndNowDuration: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 11
+      Position.X = 10.000000000000000000
+      Position.Y = 382.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblPreviouslyDuration: TLabel
+      Align = Top
+      FocusControl = edtPreviouslyDuration
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 286.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default previous video replay duration (in seconds)'
+      TabOrder = 8
+    end
+    object edtPreviouslyDuration: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 9
+      Position.X = 10.000000000000000000
+      Position.Y = 313.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblOverlayImagePath: TLabel
+      Align = Top
+      FocusControl = edtOverlayImagePath
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 217.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default "previously" overlay image path'
+      TabOrder = 6
+    end
+    object edtOverlayImagePath: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 7
+      Position.X = 10.000000000000000000
+      Position.Y = 244.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      object btnOverlayImagePathChoose: TEllipsesEditButton
+        Touch.InteractiveGestures = [LongTap]
+        CanFocus = False
+        Cursor = crArrow
+        TextSettings.Trimming = None
+        Size.Width = 28.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = btnOverlayImagePathChooseClick
+      end
+    end
+    object lblStartBackgroundImageDuration: TLabel
+      Align = Top
+      FocusControl = edtStartBackgroundImageDuration
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 148.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default intro duration (in seconds)'
+      TabOrder = 4
+    end
+    object edtStartBackgroundImageDuration: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 5
+      Position.X = 10.000000000000000000
+      Position.Y = 175.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblStartBackgroundImagePath: TLabel
+      Align = Top
+      FocusControl = edtStartBackgroundImagePath
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 79.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Default intro image background path'
+      TabOrder = 2
+    end
+    object edtStartBackgroundImagePath: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 3
+      Position.X = 10.000000000000000000
+      Position.Y = 106.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 604.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      object btnStartBackgroundImagePathChoose: TEllipsesEditButton
+        Touch.InteractiveGestures = [LongTap]
+        CanFocus = False
+        Cursor = crArrow
+        TextSettings.Trimming = None
+        Size.Width = 28.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = btnStartBackgroundImagePathChooseClick
       end
     end
   end
@@ -138,7 +491,13 @@ object frmOptions: TfrmOptions
   object OpenDialogFFmpeg: TOpenDialog
     Filter = 'FFmpeg|ffmpeg.*'
     Options = [ofHideReadOnly, ofExtensionDifferent, ofPathMustExist, ofFileMustExist, ofEnableSizing]
-    Left = 560
-    Top = 88
+    Left = 528
+    Top = 48
+  end
+  object OpenDialogImage: TOpenDialog
+    Filter = 'Image JPEG|*.jpeg;*.jpg|Image PNG|*.png'
+    Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
+    Left = 472
+    Top = 128
   end
 end
