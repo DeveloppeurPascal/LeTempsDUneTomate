@@ -185,7 +185,8 @@ uses
   uConfig,
   uProject,
   YTVideoSeries.API,
-  fOptions;
+  fOptions,
+  fProjectOptions;
 
 type
   TBitmap = FMX.Graphics.TBitmap;
@@ -662,8 +663,15 @@ begin
 end;
 
 procedure TfrmMain.mnuProjectOptionsClick(Sender: TObject);
+var
+  frm: TfrmProjectOptions;
 begin
-  // TODO : à compléter
+  frm := TfrmProjectOptions.create(self);
+  try
+    frm.ShowModal;
+  finally
+    frm.free;
+  end;
 end;
 
 procedure TfrmMain.mnuToolsOptionsClick(Sender: TObject);
