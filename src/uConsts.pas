@@ -34,13 +34,12 @@ const
   /// <summary>
   /// Durée en secondes repris sur l'épisode précédent en début du nouveau
   /// </summary>
-  CDureeRattrapageEpisodePrecedent = 10;
+  CDureePreviouslyAndNow = 10;
 
   /// <summary>
   /// Durée en secondes pour le rappel de l'épisode précédent
-  /// (jusqu'à sa durée moins la durée de rattrapage)
   /// </summary>
-  CDureeRecap = 60 - CDureeRattrapageEpisodePrecedent;
+  CDureePreviously = 60;
 
   /// <summary>
   /// Durée d'affichage de l'écran de départ en secondes
@@ -52,11 +51,10 @@ const
   /// </summary>
   CDureeFin = 5;
 
-  // TODO : supprimer ces constantes liées et les laisser en fenêtre d'option du programme
-  CFFmpeg = '/Volumes/LeTempsDUneTomate/ffmpeg';
-  CPrecedemment = '/Volumes/LeTempsDUneTomate/precedemment.png';
-  CPageIntro = '/Volumes/LeTempsDUneTomate/start-picture.png';
-  CPageFinEpisode = '/Volumes/LeTempsDUneTomate/end-picture.png';
+  /// <summary>
+  /// Default Frame Per Seconds in the source and final videos
+  /// </summary>
+  CVideoFPS = 30;
 
 implementation
 
