@@ -180,7 +180,6 @@ uses
   System.Generics.Collections,
   System.IOUtils,
   System.Math,
-  uConsts,
   u_urlOpen,
   udmAdobeStock_286917767,
   uConfig,
@@ -324,8 +323,8 @@ begin
   img := timage.create(self);
   try
     img.parent := self;
-    img.width := tconfig.DefaultVideoWidth / img.Bitmap.BitmapScale;
-    img.height := tconfig.DefaultVideoHeight / img.Bitmap.BitmapScale;
+    img.width := tproject.VideoWidth / img.Bitmap.BitmapScale;
+    img.height := tproject.VideoHeight / img.Bitmap.BitmapScale;
     img.Bitmap.LoadFromFile(tproject.EndBackgroundImage);
 
     lTitle := TLayout.create(self);
@@ -398,8 +397,8 @@ begin
   img := timage.create(self);
   try
     img.parent := self;
-    img.width := tconfig.DefaultVideoWidth / img.Bitmap.BitmapScale;
-    img.height := tconfig.DefaultVideoHeight / img.Bitmap.BitmapScale;
+    img.width := tproject.VideoWidth / img.Bitmap.BitmapScale;
+    img.height := tproject.VideoHeight / img.Bitmap.BitmapScale;
     img.Bitmap.LoadFromFile(tproject.StartBackgroundImage);
 
     lTitle := TLayout.create(self);
@@ -989,7 +988,7 @@ begin
   else
     // => ./FFmpeg -ss 19:50 -to 40:00 -i VideoSource.mp4 ContenuDeLEpisodeXXX.mp4
     ExecuteFFmpegAndWait('-ss ' + SecondesToHHMMSS(DureeEpisodeEnSecondes *
-      (EpisodeDeLaSaison - 1) - CDureeRattrapageEpisodePrecedent) + ' -to ' +
+      (EpisodeDeLaSaison - 1) - tproject.AndNowDuration) + ' -to ' +
       SecondesToHHMMSS(DureeEpisodeEnSecondes * EpisodeDeLaSaison) + ' -i "' +
       AFilePath + '"', EpisodeFilePath);
 
@@ -1002,14 +1001,18 @@ begin
   // - création des versions courtes de chaque épisode
   if EpisodeDeLaSaison = 1 then
     // => ./ffmpeg -r 600 -i ContenuDeLEpisode001.mp4 -r 30 -t 50 -map 0:v VersionCourte.mp4
-    ExecuteFFmpegAndWait('-r ' + round(30 * DureeEpisodeEnSecondes / 60)
-      .ToString + ' -i "' + EpisodeFilePath + '" -r 30 -t 50 -map 0:v',
-      VersionCourteFilePath)
+    ExecuteFFmpegAndWait('-r ' + round(tproject.VideoFPS *
+      DureeEpisodeEnSecondes / 60).ToString + ' -i "' + EpisodeFilePath +
+      '" -r ' + tproject.VideoFPS.ToString + ' -t ' +
+      (tproject.PreviouslyDuration - tproject.AndNowDuration).ToString +
+      ' -map 0:v', VersionCourteFilePath)
   else
     // => ./ffmpeg -r 600 -ss 0:10 -i ContenuDeLEpisodeXXX.mp4 -r 30 -t 50 -map 0:v VersionCourte.mp4
-    ExecuteFFmpegAndWait('-r ' + round(30 * DureeEpisodeEnSecondes / 60)
-      .ToString + ' -ss 10 -i "' + EpisodeFilePath + '" -r 30 -t 50 -map 0:v',
-      VersionCourteFilePath);
+    ExecuteFFmpegAndWait('-r ' + round(tproject.VideoFPS *
+      DureeEpisodeEnSecondes / 60).ToString + ' -ss 10 -i "' + EpisodeFilePath +
+      '" -r ' + tproject.VideoFPS.ToString + ' -t ' +
+      (tproject.PreviouslyDuration - tproject.AndNowDuration).ToString +
+      ' -map 0:v', VersionCourteFilePath);
 
   AddLog('=> ajout de l''overlay "Précédemment"');
 
@@ -1056,21 +1059,24 @@ begin
   // - recomposition de chaque épisode pour version finale (cover+précédemment+contenu+à suivre)
   if EpisodeDeLaSaison = 1 then
     // => ./ffmpeg -loop 1 -t 3 -i CoverEpisode001.png -i ContenuDeLEpisode001.mkv -loop 1 -t 5 -i ASuivre.png -filter_complex 'concat=n=3;adelay=3s:all=1' EpisodeAPublier001.mkv
-    ExecuteFFmpegAndWait('-loop 1 -t ' + cdureeintro.ToString + ' -i "' +
-      ImgStart1920FilePath + '" -i "' + EpisodeFilePath + '" -loop 1 -t ' +
-      cdureefin.ToString + ' -i "' + ImgEndFilePath +
-      '" -filter_complex ''concat=n=3;adelay=' + cdureeintro.ToString +
-      's:all=1''', EpisodeFinalFilePath)
+    ExecuteFFmpegAndWait('-loop 1 -t ' + tproject.StartBackgroundImageDuration.
+      ToString + ' -i "' + ImgStart1920FilePath + '" -i "' + EpisodeFilePath +
+      '" -loop 1 -t ' + tproject.EndBackgroundImageDuration.ToString + ' -i "' +
+      ImgEndFilePath + '" -filter_complex ''concat=n=3;adelay=' +
+      tproject.StartBackgroundImageDuration.ToString + 's:all=1''',
+      EpisodeFinalFilePath)
   else
     // => ./ffmpeg -loop 1 -t 3 -i CoverEpisodeXXX.png -i VersionCourteAUtiliser(XXX-1).mkv -i ContenuDeLEpisodeXXX.mkv -loop 1 -t 5 -i ASuivre.png -filter_complex 'concat=n=4;adelay=53s:all=1' EpisodeAPublierXXX.mkv
     // => ./ffmpeg -loop 1 -t 3 -i CoverEpisodeXXX.png -i VersionCourteAUtiliser(XXX-1).mkv -i ContenuDeLEpisodeXXX.mkv -loop 1 -t 5 -i TheEndPourYouTube.png -filter_complex 'concat=n=4;adelay=53s:all=1' EpisodeAPublierXXX.mkv
-    ExecuteFFmpegAndWait('-loop 1 -t ' + cdureeintro.ToString + ' -i "' +
-      ImgStart1920FilePath + '" -i "' + GetPrecedemmentFilePath
-      (tpath.Combine(TempDir, tproject.VideoFilePrefix + '_' + Saison.ToString +
-      '_' + (Episode - 1).ToString + '.mp4')) + '" -i "' + EpisodeFilePath +
-      '" -loop 1 -t ' + cdureefin.ToString + ' -i "' + ImgEndFilePath +
-      '" -filter_complex ''concat=n=4;adelay=' + (cdureeintro + CDureeRecap)
-      .ToString + 's:all=1''', EpisodeFinalFilePath);
+    ExecuteFFmpegAndWait('-loop 1 -t ' + tproject.StartBackgroundImageDuration.
+      ToString + ' -i "' + ImgStart1920FilePath + '" -i "' +
+      GetPrecedemmentFilePath(tpath.Combine(TempDir, tproject.VideoFilePrefix +
+      '_' + Saison.ToString + '_' + (Episode - 1).ToString + '.mp4')) + '" -i "'
+      + EpisodeFilePath + '" -loop 1 -t ' + tproject.EndBackgroundImageDuration.
+      ToString + ' -i "' + ImgEndFilePath +
+      '" -filter_complex ''concat=n=4;adelay=' +
+      (tproject.StartBackgroundImageDuration + tproject.PreviouslyDuration -
+      tproject.AndNowDuration).ToString + 's:all=1''', EpisodeFinalFilePath);
 
   if (YTVS_TubeCode > 0) and (YTVS_SeasonCode > 0) then
   begin
