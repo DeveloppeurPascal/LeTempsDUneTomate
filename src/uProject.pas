@@ -17,6 +17,21 @@ type
     class function GetTitle: string; static;
     class function GetVideoDuration: integer; static;
     class function GetVideoFilePrefix: string; static;
+    class function GetAndNowDuration: integer; static;
+    class function GetEndBackgroundImageDuration: integer; static;
+    class function GetPreviouslyDuration: integer; static;
+    class function GetStartBackgroundImageDuration: integer; static;
+    class procedure SetAndNowDuration(const Value: integer); static;
+    class procedure SetEndBackgroundImageDuration(const Value: integer); static;
+    class procedure SetPreviouslyDuration(const Value: integer); static;
+    class procedure SetStartBackgroundImageDuration
+      (const Value: integer); static;
+    class function GetVideoHeight: integer; static;
+    class function GetVideoWidth: integer; static;
+    class procedure SetVideoHeight(const Value: integer); static;
+    class procedure SetVideoWidth(const Value: integer); static;
+    class function GetVideoFPS: integer; static;
+    class procedure SetVideoFPS(const Value: integer); static;
   protected
   public
     class property Title: string read GetTitle write SetTitle;
@@ -26,10 +41,23 @@ type
       write SetVideoDuration;
     class property StartBackgroundImage: string read GetStartBackgroundImage
       write SetStartBackgroundImage;
-    class property EndBackgroundImage: string read GetEndBackgroundImage
-      write SetEndBackgroundImage;
+    class property StartBackgroundImageDuration: integer
+      read GetStartBackgroundImageDuration
+      write SetStartBackgroundImageDuration;
     class property OverlayImage: string read GetOverlayImage
       write SetOverlayImage;
+    class property PreviouslyDuration: integer read GetPreviouslyDuration
+      write SetPreviouslyDuration;
+    class property AndNowDuration: integer read GetAndNowDuration
+      write SetAndNowDuration;
+    class property EndBackgroundImage: string read GetEndBackgroundImage
+      write SetEndBackgroundImage;
+    class property EndBackgroundImageDuration: integer
+      read GetEndBackgroundImageDuration write SetEndBackgroundImageDuration;
+    class property VideoWidth: integer read GetVideoWidth write SetVideoWidth;
+    class property VideoHeight: integer read GetVideoHeight
+      write SetVideoHeight;
+    class property VideoFPS: integer read GetVideoFPS write SetVideoFPS;
     class procedure Open(const FromPath: string);
     class procedure Save;
     class procedure Close;
@@ -64,9 +92,20 @@ begin
   freeandnil(ProjectFile);
 end;
 
+class function TProject.GetAndNowDuration: integer;
+begin
+  result := ProjectFile.getValue('AndNowD', tConfig.DefaultAndNowDuration);
+end;
+
 class function TProject.GetEndBackgroundImage: string;
 begin
   result := ProjectFile.getValue('EndImg', tConfig.DefaultEndBackgroundImage);
+end;
+
+class function TProject.GetEndBackgroundImageDuration: integer;
+begin
+  result := ProjectFile.getValue('EndImgD',
+    tConfig.DefaultEndBackgroundImageDuration);
 end;
 
 class function TProject.GetFolder: string;
@@ -79,10 +118,21 @@ begin
   result := ProjectFile.getValue('OverImg', tConfig.DefaultOverlayImage);
 end;
 
+class function TProject.GetPreviouslyDuration: integer;
+begin
+  result := ProjectFile.getValue('PrevD', tConfig.DefaultPreviouslyDuration);
+end;
+
 class function TProject.GetStartBackgroundImage: string;
 begin
   result := ProjectFile.getValue('StartImg',
     tConfig.DefaultStartBackgroundImage);
+end;
+
+class function TProject.GetStartBackgroundImageDuration: integer;
+begin
+  result := ProjectFile.getValue('StartImgD',
+    tConfig.DefaultStartBackgroundImageDuration);
 end;
 
 class function TProject.GetTitle: string;
@@ -98,6 +148,21 @@ end;
 class function TProject.GetVideoFilePrefix: string;
 begin
   result := ProjectFile.getValue('MvF', '');
+end;
+
+class function TProject.GetVideoFPS: integer;
+begin
+  result := ProjectFile.getValue('VidFPS', tConfig.DefaultVideoFPS);
+end;
+
+class function TProject.GetVideoHeight: integer;
+begin
+  result := ProjectFile.getValue('VidH', tConfig.DefaultVideoHeight);
+end;
+
+class function TProject.GetVideoWidth: integer;
+begin
+  result := ProjectFile.getValue('VidW', tConfig.DefaultVideoWidth);
 end;
 
 class function TProject.isOpened: boolean;
@@ -171,9 +236,19 @@ begin
   ProjectFile.Save;
 end;
 
+class procedure TProject.SetAndNowDuration(const Value: integer);
+begin
+  ProjectFile.setValue('AndNowD', Value);
+end;
+
 class procedure TProject.SetEndBackgroundImage(const Value: string);
 begin
   ProjectFile.setValue('EndImg', Value);
+end;
+
+class procedure TProject.SetEndBackgroundImageDuration(const Value: integer);
+begin
+  ProjectFile.setValue('EndImgD', Value);
 end;
 
 class procedure TProject.SetOverlayImage(const Value: string);
@@ -181,9 +256,19 @@ begin
   ProjectFile.setValue('OverImg', Value);
 end;
 
+class procedure TProject.SetPreviouslyDuration(const Value: integer);
+begin
+  ProjectFile.setValue('PrevD', Value);
+end;
+
 class procedure TProject.SetStartBackgroundImage(const Value: string);
 begin
   ProjectFile.setValue('StartImg', Value);
+end;
+
+class procedure TProject.SetStartBackgroundImageDuration(const Value: integer);
+begin
+  ProjectFile.setValue('StartImgD', Value);
 end;
 
 class procedure TProject.SetTitle(const Value: string);
@@ -199,6 +284,21 @@ end;
 class procedure TProject.SetVideoFilePrefix(const Value: string);
 begin
   ProjectFile.setValue('MvF', Value);
+end;
+
+class procedure TProject.SetVideoFPS(const Value: integer);
+begin
+  ProjectFile.setValue('VidFPS', Value);
+end;
+
+class procedure TProject.SetVideoHeight(const Value: integer);
+begin
+  ProjectFile.setValue('VidH', Value);
+end;
+
+class procedure TProject.SetVideoWidth(const Value: integer);
+begin
+  ProjectFile.setValue('VidW', Value);
 end;
 
 initialization
