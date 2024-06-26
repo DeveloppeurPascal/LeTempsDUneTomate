@@ -1,4 +1,4 @@
-# 20240625 - [DeveloppeurPascal](https://github.com/XXX_USER_XXX)
+# 20240625 - [DeveloppeurPascal](https://github.com/DeveloppeurPascal)
 
 * mise à jour des dépendances
 * mise à jour des fichiers README fr/en (titre, description, liens et dépendances)
